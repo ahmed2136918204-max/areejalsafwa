@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://areejalsafwa.com/sitemap.xml

@@ -1,0 +1,27 @@
+{
+  "name": "شركة أريج الصفوة لخدمات السيارات",
+  "short_name": "أريج الصفوة",
+  "description": "خدمات صيانة سيارات احترافية في الرياض وأبها",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f8fafc",
+  "theme_color": "#1d5ca3",
+  "icons": [
+    {
+      "src": "اريج_الصفوة-removebg-preview.PNG",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "اريج_الصفوة-removebg-preview.PNG",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
