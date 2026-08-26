@@ -3201,6 +3201,10 @@
             const phone = document.getElementById('phoneNumber').value.trim(); if(!phone || !validatePhoneNumberLive()) return showToast('رقم الجوال غير صحيح!', 'error');
             const code = document.getElementById('countryCode').value; let cp = phone.replace(/\D/g,'').replace(/^0+/,''); if(!cp.startsWith(code)) cp = code+cp;
             const msg = generateMessage();
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=${cp}&text=${encodeURIComponent(msg)}`;
+
+            // Safari on iPhone blocks window.open when it runs after an await.
+            window.open(whatsappUrl, '_blank');
 
             if (activeTab === 'ready') {
                 const plateFromForm = normalizeMessagingPlate(getFormattedPlate());
@@ -3220,7 +3224,6 @@
                 await setDoc(doc(db,'artifacts',appId,'public','data','history','log_'+Date.now()), { customerName: document.getElementById('customerName').value||'عميل', phone: cp, action: activeTab, carModel: document.getElementById('carModel').value, plate: getFormattedPlate(), message: msg, by: currentUser.email.split('@')[0], timestamp: new Date().toISOString() });
                 logActivity('إرسال واتساب', `تم إرسال إشعار (${activeTab}) للعميل - لوحة: ${messagePlate}`);
             }
-            window.open(`https://api.whatsapp.com/send?phone=${cp}&text=${encodeURIComponent(msg)}`, '_blank');
         }
         window.sendToWhatsApp = sendToWhatsApp;
 
