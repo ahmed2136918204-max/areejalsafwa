@@ -1452,7 +1452,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 bg-white dark:bg-slate-900 p-3 rounded-xl border dark:border-slate-800 w-full">
                             <div>
                                 <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 mb-1">البحث النصي</label>
-                                <input type="text" id="carSearchInput" oninput="window.renderCarsTracker()" placeholder="نوع السيارة، اللوحة، الملاحظات..." class="w-full bg-gray-50 dark:bg-slate-800 border dark:border-slate-700 text-xs px-2 py-1.5 rounded-lg text-dark dark:text-white outline-none focus:ring-1 focus:ring-safwa-gold">
+                                <input type="text" id="carSearchInput" oninput="window.debounceCarsTrackerRender()" placeholder="نوع السيارة، اللوحة، الملاحظات..." class="w-full bg-gray-50 dark:bg-slate-800 border dark:border-slate-700 text-xs px-2 py-1.5 rounded-lg text-dark dark:text-white outline-none focus:ring-1 focus:ring-safwa-gold">
                             </div>
                             <div>
                                 <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 mb-1">موقع السيارة</label>
@@ -3743,6 +3743,16 @@
             window.renderCarsTracker();
         };
 
+        let carsTrackerRenderTimer = null;
+        window.debounceCarsTrackerRender = () => {
+            if (carsTrackerRenderTimer) {
+                clearTimeout(carsTrackerRenderTimer);
+            }
+            carsTrackerRenderTimer = setTimeout(() => {
+                window.renderCarsTracker();
+            }, 120);
+        };
+
         const formatStatusUpdatedAt = (value) => {
             if (!value) return 'غير مسجل';
             let dt = new Date(value);
@@ -3758,8 +3768,15 @@
         };
 
         window.renderCarsTracker = () => {
-            const cars = JSON.parse(localStorage.getItem('safwa_cars_tracker')||'[]'); 
-            
+            let cars = [];
+            try {
+                const raw = JSON.parse(localStorage.getItem('safwa_cars_tracker') || '[]');
+                cars = Array.isArray(raw) ? raw : [];
+            } catch (error) {
+                console.error('Failed to read cars tracker data:', error);
+                cars = [];
+            }
+
             const total = cars.length;
             const centerCount = cars.filter(c => c.location === 'center').length;
             const customerCount = cars.filter(c => c.location === 'customer').length;
@@ -3779,26 +3796,26 @@
 
             const searchInput = document.getElementById('carSearchInput');
             const term = searchInput ? searchInput.value.trim().toLowerCase() : '';
-            
+
             const f = cars.filter(c => {
-                const matchesSearch = (c.model||'').toLowerCase().includes(term) || (c.plate||'').toLowerCase().includes(term) || (c.notes||'').toLowerCase().includes(term);
+                const matchesSearch = (c.model || '').toLowerCase().includes(term) || (c.plate || '').toLowerCase().includes(term) || (c.notes || '').toLowerCase().includes(term);
                 const matchesLoc = window.carFilters.location === 'all' || c.location === window.carFilters.location;
                 const matchesApp = window.carFilters.approval === 'all' || c.approval === window.carFilters.approval;
                 const matchesRep = window.carFilters.repair === 'all' || c.repairStatus === window.carFilters.repair;
                 return matchesSearch && matchesLoc && matchesApp && matchesRep;
             });
-            
-            const tb = document.getElementById('trackerTableBody'); 
+
+            const tb = document.getElementById('trackerTableBody');
             const noMsg = document.getElementById('noCarsMsg');
-            
-            if (!tb) return; 
-            tb.innerHTML = '';
-            
+
+            if (!tb) return;
+
             const badge = document.getElementById('trackerTotalBadge');
             if (badge) badge.textContent = `إجمالي: ${f.length} سيارة`;
 
-            if(f.length === 0) {
-                if (noMsg && noMsg.classList) noMsg.classList.remove('hidden'); 
+            if (f.length === 0) {
+                tb.innerHTML = '';
+                if (noMsg && noMsg.classList) noMsg.classList.remove('hidden');
                 return;
             }
             if (noMsg && noMsg.classList) noMsg.classList.add('hidden');
@@ -3812,15 +3829,16 @@
                 }
             };
 
+            const rowsHtml = [];
             f.forEach(c => {
                 const repText = getRepairLabel(c.repairStatus);
-                const appText = c.approval==='approved'?'✅ معمد':c.approval==='none'?'❌ لم يتم':'⏳ بانتظار التعميد';
+                const appText = c.approval === 'approved' ? '✅ معمد' : c.approval === 'none' ? '❌ لم يتم' : '⏳ بانتظار التعميد';
                 const locationUpdatedAt = getStatusTimestampWithFallback(c, 'lastLocationUpdatedAt');
                 const approvalUpdatedAt = getStatusTimestampWithFallback(c, 'lastApprovalUpdatedAt');
                 const repairUpdatedAt = getStatusTimestampWithFallback(c, 'lastRepairStatusUpdatedAt');
-                
+
                 let dtObj = new Date(c.date);
-                if (isNaN(dtObj.getTime())) dtObj = new Date(); 
+                if (isNaN(dtObj.getTime())) dtObj = new Date();
                 const dateStr = dtObj.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' });
 
                 const customerHtml = [];
@@ -3828,7 +3846,7 @@
                 if (c.customerPhone) customerHtml.push(`<button type="button" onclick="window.openMessagingFromCar('${c.id}')" class="text-[10px] text-primary dark:text-blue-400 hover:text-secondary dark:hover:text-orange-300 hover:underline transition" dir="ltr" title="فتح المراسلات وتعبئة بيانات السيارة"><i class="fa-solid fa-phone text-[9px] ml-1"></i>${c.customerPhone}</button>`);
                 const notesHtml = c.notes ? `<br><span class="text-[10px] text-amber-700 dark:text-amber-400 font-semibold bg-amber-50 dark:bg-amber-950/30 border border-amber-200/40 px-2 py-0.5 rounded-md inline-block mt-1"><i class="fa-solid fa-sticky-note text-[9px] ml-1"></i> ${c.notes}</span>` : '';
 
-                tb.innerHTML += `
+                rowsHtml.push(`
                     <tr class="border-b dark:border-slate-800/50 hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition">
                         <td class="p-3 text-xs font-bold">
                             ${c.model}<br>
@@ -3837,7 +3855,7 @@
                             ${notesHtml}
                         </td>
                         <td class="p-3 text-center">
-                            <button onclick="window.toggleCarLocation('${c.id}')" class="text-[10px] bg-gray-100 dark:bg-slate-800 px-2.5 py-1 rounded-full font-bold">${c.location==='customer'?'🚗 مع العميل':'🏢 بالمركز'}</button>
+                            <button onclick="window.toggleCarLocation('${c.id}')" class="text-[10px] bg-gray-100 dark:bg-slate-800 px-2.5 py-1 rounded-full font-bold">${c.location === 'customer' ? '🚗 مع العميل' : '🏢 بالمركز'}</button>
                             <div class="mt-1 text-[10px] text-slate-500 dark:text-slate-400">آخر تعديل: ${formatStatusUpdatedAt(locationUpdatedAt)}</div>
                         </td>
                         <td class="p-3 text-center">
@@ -3857,8 +3875,10 @@
                                 <button onclick="window.deleteCarPermanentlyFromTracker('${c.id}')" class="text-rose-700 hover:text-rose-800 p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/30 transition" title="حذف نهائي"><i class="fa-solid fa-trash-can text-sm"></i></button>
                             </div>
                         </td>
-                    </tr>`;
+                    </tr>`);
             });
+
+            tb.innerHTML = rowsHtml.join('');
         };
 
         window.renderWorkersLog = () => {
