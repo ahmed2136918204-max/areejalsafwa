@@ -533,12 +533,22 @@
                 </div>
 
                 <div class="max-w-4xl mx-auto bg-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-700">
+                    <div class="flex gap-3 mb-8 justify-center flex-wrap">
+                        <button type="button" onclick="window.setBookingRequestType('booking')" id="reqTypeBtn-booking" class="req-type-btn flex-1 min-w-[160px] max-w-[220px] py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-secondary text-white shadow-lg transition">
+                            <i class="fa-solid fa-calendar-check"></i> حجز موعد
+                        </button>
+                        <button type="button" onclick="window.setBookingRequestType('complaint')" id="reqTypeBtn-complaint" class="req-type-btn flex-1 min-w-[160px] max-w-[220px] py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 bg-slate-900 text-slate-300 border border-slate-700 transition">
+                            <i class="fa-solid fa-triangle-exclamation"></i> شكوى / اقتراح
+                        </button>
+                    </div>
                     <form id="bookingForm" onsubmit="window.handleBookingSubmit(event)" class="space-y-6">
+                        <input type="hidden" id="bookRequestType" value="booking">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div><label class="block text-slate-300 font-bold mb-2 text-sm">اسم العميل بالكامل *</label><input type="text" id="bookName" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-secondary outline-none"></div>
                             <div><label class="block text-slate-300 font-bold mb-2 text-sm">رقم الجوال *</label><input type="tel" id="bookPhone" required placeholder="05xxxxxxxx" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-secondary outline-none" dir="ltr"></div>
                             <div><label class="block text-slate-300 font-bold mb-2 text-sm">نوع السيارة *</label><input type="text" id="bookCar" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-secondary outline-none"></div>
-                            <div>
+                            <div><label class="block text-slate-300 font-bold mb-2 text-sm">رقم لوحة السيارة *</label><input type="text" id="bookPlate" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-secondary outline-none"></div>
+                            <div id="bookServiceContainer">
                                 <label class="block text-slate-300 font-bold mb-2 text-sm">الخدمة المطلوبة *</label>
                                 <select id="bookService" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-secondary outline-none">
                                     <option value="صيانة ميكانيكية">صيانة ميكانيكية</option>
@@ -549,8 +559,8 @@
                                     <option value="سمكرة ورش دهان">سمكرة ورش دهان</option>
                                 </select>
                             </div>
-                            <div><label class="block text-slate-300 font-bold mb-2 text-sm">التاريخ *</label><input type="date" id="bookDate" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white outline-none"></div>
-                            <div>
+                            <div id="bookDateContainer"><label class="block text-slate-300 font-bold mb-2 text-sm">التاريخ *</label><input type="date" id="bookDate" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white outline-none"></div>
+                            <div id="bookTimeContainer">
                                 <label class="block text-slate-300 font-bold mb-2 text-sm">الوقت *</label>
                                 <select id="bookTime" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white outline-none">                              
                                     <option value="08:00 صباحاً">08:00 ص - 10:00 ص</option>
@@ -560,9 +570,13 @@
                                 </select>
                             </div>
                         </div>
+                        <div>
+                            <label id="bookDetailsLabel" class="block text-slate-300 font-bold mb-2 text-sm">تفاصيل الحجز *</label>
+                            <textarea id="bookDetails" required rows="3" placeholder="اكتب أي ملاحظات إضافية تخص الحجز..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-secondary outline-none"></textarea>
+                        </div>
                         <div class="text-center">
-                            <button type="submit" class="bg-secondary hover:bg-orange-600 text-white font-bold py-4 px-12 rounded-xl transition shadow-lg inline-flex items-center gap-2 text-lg">
-                                <i class="fab fa-whatsapp"></i> تأكيد الحجز وإرسال للواتساب
+                            <button type="submit" id="bookSubmitBtn" class="bg-secondary hover:bg-orange-600 text-white font-bold py-4 px-12 rounded-xl transition shadow-lg inline-flex items-center gap-2 text-lg">
+                                <i class="fa-solid fa-paper-plane"></i> تأكيد وإرسال الطلب
                             </button>
                         </div>
                     </form>
@@ -1188,6 +1202,10 @@
                 <button onclick="window.switchAppTab('employees')" id="appTab-employees" class="hidden flex-1 min-w-[120px] py-2.5 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-white">
                     <i class="fa-solid fa-users-gear text-sky-500"></i> صلاحيات الموظفين 👥
                 </button>
+                <button onclick="window.switchAppTab('requests')" id="appTab-requests" class="relative flex-1 min-w-[160px] py-2.5 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-white">
+                    <i class="fa-solid fa-headset text-red-500"></i> الطلبات والشكاوى
+                    <span id="requestsBadge" class="hidden absolute -top-1.5 -left-1.5 bg-red-600 text-white text-[10px] font-bold min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900">0</span>
+                </button>
             </div>
 
             <!-- ========================== -->
@@ -1606,6 +1624,69 @@
                     </div>
                 </div>
             </div>
+
+            <!-- ========================================== -->
+            <!-- وحدة الطلبات والشكاوى (Customer Requests) -->
+            <!-- ========================================== -->
+            <div id="requestsModule" class="hidden">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6 font-tajawal">
+                    <div class="bg-white dark:bg-slate-900 border dark:border-slate-800 p-3 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center">
+                        <span class="text-[10px] text-gray-400 font-bold mb-1">الكل 📨</span>
+                        <span class="text-xl font-black text-primary dark:text-blue-400" id="stat-requests-total">0</span>
+                    </div>
+                    <div class="bg-white dark:bg-slate-900 border dark:border-slate-800 p-3 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center">
+                        <span class="text-[10px] text-gray-400 font-bold mb-1">🆕 جديد</span>
+                        <span class="text-xl font-black text-amber-600" id="stat-requests-new">0</span>
+                    </div>
+                    <div class="bg-white dark:bg-slate-900 border dark:border-slate-800 p-3 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center">
+                        <span class="text-[10px] text-gray-400 font-bold mb-1">👁 تمت المراجعة</span>
+                        <span class="text-xl font-black text-blue-600" id="stat-requests-inprogress">0</span>
+                    </div>
+                    <div class="bg-white dark:bg-slate-900 border dark:border-slate-800 p-3 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center">
+                        <span class="text-[10px] text-gray-400 font-bold mb-1">✅ مكتمل</span>
+                        <span class="text-xl font-black text-emerald-600" id="stat-requests-resolved">0</span>
+                    </div>
+                </div>
+
+                <div id="requestsCard" class="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-gray-150 dark:border-slate-800 overflow-hidden text-right">
+                    <div class="p-4 border-b border-gray-100 dark:border-slate-800 flex flex-col gap-4 bg-slate-50 dark:bg-slate-800/50">
+                        <div class="flex justify-between items-center w-full flex-wrap gap-2">
+                            <h3 class="font-bold text-slate-800 dark:text-white flex items-center gap-1.5"><i class="fa-solid fa-headset text-safwa-gold"></i> سجل الطلبات والشكاوى</h3>
+                            <span id="requestsTotalBadge" class="bg-[#1b263b] text-safwa-gold text-xs font-bold px-3 py-2 rounded border border-safwa-gold/30 font-tajawal">إجمالي: 0 طلب</span>
+                        </div>
+
+                        <!-- لوحة الفلاتر لتصفية الطلبات والشكاوى -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-white dark:bg-slate-900 p-3 rounded-xl border dark:border-slate-800 w-full">
+                            <div>
+                                <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 mb-1">البحث النصي</label>
+                                <input type="text" id="requestsSearchInput" oninput="window.renderCustomerRequests()" placeholder="اسم العميل، الجوال، اللوحة..." class="w-full bg-gray-50 dark:bg-slate-800 border dark:border-slate-700 text-xs px-2 py-1.5 rounded-lg text-dark dark:text-white outline-none focus:ring-1 focus:ring-safwa-gold">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 mb-1">نوع الطلب</label>
+                                <select id="requestsFilterType" onchange="window.renderCustomerRequests()" class="w-full bg-gray-50 dark:bg-slate-800 border dark:border-slate-700 text-xs p-1.5 rounded-lg text-dark dark:text-white outline-none">
+                                    <option value="all">الكل</option>
+                                    <option value="booking">📅 حجز موعد</option>
+                                    <option value="complaint">⚠️ شكوى / اقتراح</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 mb-1">حالة الطلب</label>
+                                <select id="requestsFilterStatus" onchange="window.renderCustomerRequests()" class="w-full bg-gray-50 dark:bg-slate-800 border dark:border-slate-700 text-xs p-1.5 rounded-lg text-dark dark:text-white outline-none">
+                                    <option value="all">الكل</option>
+                                    <option value="new">🆕 جديد</option>
+                                    <option value="in_progress">👁 تمت المراجعة</option>
+                                    <option value="resolved">✅ مكتمل</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 space-y-3" id="customerRequestsList"></div>
+                    <div id="noCustomerRequestsMsg" class="text-center py-10 text-gray-400 dark:text-slate-500 text-sm flex flex-col items-center gap-3 hidden">
+                        <i class="fa-solid fa-inbox text-5xl text-gray-300 dark:text-slate-700"></i>
+                        <span>لا توجد طلبات أو شكاوى مطابقة حالياً.</span>
+                    </div>
+                </div>
+            </div>
         </main>
         
         <footer class="bg-[#0d1b2a] text-gray-400 text-center py-4 text-xs mt-6 border-t border-safwa-gold/30">
@@ -1901,6 +1982,7 @@
         </div>
     </div>
 
+
     <!-- نافذة التأكيد المخصصة -->
     <div id="customConfirmModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-[120] opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 p-6 rounded-2xl max-w-sm w-full font-tajawal transform scale-95 transition-transform duration-300 text-right">
@@ -2119,17 +2201,67 @@
             window.loadPublicVehicleData?.().catch(() => {});
         });
 
-        window.handleBookingSubmit = (e) => {
+        window.setBookingRequestType = (type) => {
+            const isBooking = type === 'booking';
+            document.getElementById('bookRequestType').value = type;
+            document.getElementById('bookServiceContainer').classList.toggle('hidden', !isBooking);
+            document.getElementById('bookDateContainer').classList.toggle('hidden', !isBooking);
+            document.getElementById('bookTimeContainer').classList.toggle('hidden', !isBooking);
+            document.getElementById('bookService').required = isBooking;
+            document.getElementById('bookDate').required = isBooking;
+            document.getElementById('bookTime').required = isBooking;
+            document.getElementById('bookDetailsLabel').textContent = isBooking ? 'تفاصيل الحجز *' : 'تفاصيل الشكوى / الاقتراح *';
+            document.getElementById('bookDetails').placeholder = isBooking ? 'اكتب أي ملاحظات إضافية تخص الحجز...' : 'يرجى وصف الشكوى أو الاقتراح بالتفصيل...';
+            document.getElementById('bookSubmitBtn').innerHTML = isBooking
+                ? '<i class="fa-solid fa-paper-plane"></i> تأكيد وإرسال طلب الحجز'
+                : '<i class="fa-solid fa-paper-plane"></i> تأكيد وإرسال الشكوى';
+
+            const btnBooking = document.getElementById('reqTypeBtn-booking');
+            const btnComplaint = document.getElementById('reqTypeBtn-complaint');
+            [[btnBooking, isBooking], [btnComplaint, !isBooking]].forEach(([btn, active]) => {
+                if (!btn) return;
+                btn.classList.toggle('bg-secondary', active);
+                btn.classList.toggle('text-white', active);
+                btn.classList.toggle('bg-slate-900', !active);
+                btn.classList.toggle('text-slate-300', !active);
+            });
+        };
+
+        window.handleBookingSubmit = async (e) => {
             e.preventDefault();
-            const name = document.getElementById('bookName').value;
-            const phone = document.getElementById('bookPhone').value;
-            const car = document.getElementById('bookCar').value;
+            const type = document.getElementById('bookRequestType').value || 'booking';
+            const isBooking = type === 'booking';
+            const name = document.getElementById('bookName').value.trim();
+            const phone = document.getElementById('bookPhone').value.trim();
+            const car = document.getElementById('bookCar').value.trim();
+            const plate = document.getElementById('bookPlate').value.trim();
+            const details = document.getElementById('bookDetails').value.trim();
             const service = document.getElementById('bookService').value;
             const date = document.getElementById('bookDate').value;
             const time = document.getElementById('bookTime').value;
 
-            const message = `*طلب حجز موعد صيانة جديد - أريج الصفوة*\n\n👤 *العميل:* ${name}\n📞 *الجوال:* ${phone}\n🚗 *السيارة:* ${car}\n🛠 *الخدمة:* ${service}\n📅 *التاريخ:* ${date}\n⏰ *الوقت:* ${time}`;
-            window.open(`https://api.whatsapp.com/send?phone=966564917463&text=${encodeURIComponent(message)}`, '_blank');
+            if (!name || !phone || !car || !plate || !details || (isBooking && (!service || !date || !time))) {
+                showToast('يرجى تعبئة جميع الحقول الإلزامية قبل الإرسال.', 'error');
+                return;
+            }
+
+            const submitBtn = document.getElementById('bookSubmitBtn');
+            if (submitBtn) submitBtn.disabled = true;
+
+            await window.saveCustomerRequest?.({
+                type,
+                customer_name: name,
+                phone_number: phone,
+                car_type: car,
+                plate_number: plate,
+                details: isBooking ? `${details}\nالخدمة: ${service}\nالتاريخ: ${date}\nالوقت: ${time}` : details,
+                status: 'new'
+            });
+
+            showToast(isBooking ? 'تم تأكيد استلام طلب الحجز بنجاح، سيتم التواصل معك قريباً.' : 'تم تأكيد استلام الشكوى بنجاح، سيتم التواصل معك قريباً.', 'success');
+            e.target.reset();
+            window.setBookingRequestType('booking');
+            if (submitBtn) submitBtn.disabled = false;
         };
 
         window.updateBeforeAfter = (value) => {
@@ -2532,8 +2664,8 @@
             const visitorCount = Number.isFinite(serverVisitors) && serverVisitors >= 0
                 ? serverVisitors
                 : localVisitors;
-            if (visitors) visitors.textContent = visitorCount.toLocaleString('ar-EG');
-            if (searches) searches.textContent = Number(siteStatsCache.plateSearches || plateSearchLogCache.length || 0).toLocaleString('ar-EG');
+            if (visitors) visitors.textContent = visitorCount.toLocaleString('en-US');
+            if (searches) searches.textContent = Number(siteStatsCache.plateSearches || plateSearchLogCache.length || 0).toLocaleString('en-US');
         }
 
         function renderPlateSearchLog() {
@@ -2575,6 +2707,29 @@
             localStorage.setItem('safwa_plate_search_logs', JSON.stringify(localLogs.slice(0, 200)));
             plateSearchLogCache = localLogs;
             renderPlateSearchLog();
+        };
+
+        // استقبال طلبات الحجز والشكاوى من نموذج العميل العام (customer_requests)
+        window.saveCustomerRequest = async (request) => {
+            const payload = { ...request, created_at: new Date().toISOString() };
+            if (!db) await initFirebase();
+            if (db) {
+                try {
+                    await addDoc(collection(db, ...publicDataPath('customer_requests')), payload);
+                    return true;
+                } catch (error) {
+                    // فشل الحفظ السحابي غالباً بسبب صلاحيات Firestore Rules على مجموعة customer_requests
+                    console.error('Failed to save customer request:', error);
+                    showToast(`تعذر حفظ الطلب سحابياً (${error.code || error.message}). تم حفظه محلياً فقط.`, 'error');
+                }
+            }
+            const localRequests = JSON.parse(localStorage.getItem('safwa_customer_requests') || '[]');
+            localRequests.unshift({ id: 'local_' + Date.now(), ...payload });
+            localStorage.setItem('safwa_customer_requests', JSON.stringify(localRequests));
+            customerRequestsCache = localRequests;
+            window.renderCustomerRequests?.();
+            window.updateRequestsBadge?.();
+            return false;
         };
 
         async function recordSiteVisit() {
@@ -2767,9 +2922,138 @@
         window.closeActivityLogModal = () => document.getElementById('activityLogModal').classList.add('hidden');
 
         // Realtime Listeners
-        let unsubCars = null, unsubDelivered = null, unsubHistory = null, unsubActivity = null, unsubEmployees = null, unsubAssignments = null, unsubWorkersDirectory = null;
+        let unsubCars = null, unsubDelivered = null, unsubHistory = null, unsubActivity = null, unsubEmployees = null, unsubAssignments = null, unsubWorkersDirectory = null, unsubCustomerRequests = null;
         let activityLogCache = [];
         let workersLogIndexCache = [];
+        let customerRequestsCache = [];
+
+        // بيانات وصفية لعرض شارات نوع الطلب وحالته في لوحة الطلبات والشكاوى
+        const requestTypeMeta = {
+            booking: { label: 'حجز موعد', badgeClass: 'bg-sky-100 text-sky-700 dark:bg-sky-950/40 dark:text-sky-300', icon: 'fa-calendar-check' },
+            complaint: { label: 'شكوى / اقتراح', badgeClass: 'bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300', icon: 'fa-triangle-exclamation' }
+        };
+        const requestStatusMeta = {
+            new: { label: 'جديد', badgeClass: 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300' },
+            in_progress: { label: 'تمت المراجعة', badgeClass: 'bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300' },
+            resolved: { label: 'مكتمل', badgeClass: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300' }
+        };
+
+        window.updateRequestsBadge = () => {
+            const badge = document.getElementById('requestsBadge');
+            if (!badge) return;
+            const newCount = customerRequestsCache.filter((r) => (r.status || 'new') === 'new').length;
+            if (newCount > 0) {
+                badge.textContent = newCount > 99 ? '99+' : String(newCount);
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        };
+
+        window.renderCustomerRequests = () => {
+            const container = document.getElementById('customerRequestsList');
+            const noMsg = document.getElementById('noCustomerRequestsMsg');
+            if (!container) return;
+
+            const updateStat = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+            updateStat('stat-requests-total', customerRequestsCache.length);
+            updateStat('stat-requests-new', customerRequestsCache.filter((r) => (r.status || 'new') === 'new').length);
+            updateStat('stat-requests-inprogress', customerRequestsCache.filter((r) => r.status === 'in_progress').length);
+            updateStat('stat-requests-resolved', customerRequestsCache.filter((r) => r.status === 'resolved').length);
+
+            const searchTerm = (document.getElementById('requestsSearchInput')?.value || '').trim().toLowerCase();
+            const typeFilter = document.getElementById('requestsFilterType')?.value || 'all';
+            const statusFilter = document.getElementById('requestsFilterStatus')?.value || 'all';
+
+            const filtered = customerRequestsCache.filter((r) => {
+                const matchesSearch = !searchTerm
+                    || (r.customer_name || '').toLowerCase().includes(searchTerm)
+                    || (r.phone_number || '').toLowerCase().includes(searchTerm)
+                    || (r.plate_number || '').toLowerCase().includes(searchTerm)
+                    || (r.car_type || '').toLowerCase().includes(searchTerm);
+                const matchesType = typeFilter === 'all' || r.type === typeFilter;
+                const matchesStatus = statusFilter === 'all' || (r.status || 'new') === statusFilter;
+                return matchesSearch && matchesType && matchesStatus;
+            });
+
+            const totalBadge = document.getElementById('requestsTotalBadge');
+            if (totalBadge) totalBadge.textContent = `إجمالي: ${filtered.length} طلب`;
+
+            if (!filtered.length) {
+                container.innerHTML = '';
+                if (noMsg) noMsg.classList.remove('hidden');
+                return;
+            }
+            if (noMsg) noMsg.classList.add('hidden');
+
+            container.innerHTML = filtered.map((r) => {
+                const typeMeta = requestTypeMeta[r.type] || requestTypeMeta.booking;
+                const statusMeta = requestStatusMeta[r.status] || requestStatusMeta.new;
+                const dt = new Date(r.created_at);
+                const dateLabel = isNaN(dt.getTime())
+                    ? '-'
+                    : dt.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }) + ' - ' + dt.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+                return `
+                <div class="bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl p-4 shadow-sm">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-1 text-[10px] font-bold rounded-full ${typeMeta.badgeClass}"><i class="fa-solid ${typeMeta.icon}"></i> ${typeMeta.label}</span>
+                            <span class="px-2.5 py-1 text-[10px] font-bold rounded-full ${statusMeta.badgeClass}">${statusMeta.label}</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400 dark:text-slate-500 font-mono">${dateLabel}</span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs mb-3">
+                        <div><span class="block text-gray-400 dark:text-slate-500">الاسم</span><span class="font-bold">${escapeHtml(r.customer_name)}</span></div>
+                        <div><span class="block text-gray-400 dark:text-slate-500">الجوال</span><span class="font-bold font-mono" dir="ltr">${escapeHtml(r.phone_number)}</span></div>
+                        <div><span class="block text-gray-400 dark:text-slate-500">السيارة</span><span class="font-bold">${escapeHtml(r.car_type)}</span></div>
+                        <div><span class="block text-gray-400 dark:text-slate-500">اللوحة</span><span class="font-bold font-mono">${escapeHtml(r.plate_number)}</span></div>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl p-3 text-xs mb-3">
+                        <span class="block text-gray-400 dark:text-slate-500 mb-1 font-bold"><i class="fa-solid fa-align-right"></i> تفاصيل ${r.type === 'complaint' ? 'الشكوى' : 'الحجز'}</span>
+                        <p class="whitespace-pre-wrap leading-relaxed">${escapeHtml(r.details)}</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="window.contactRequestWhatsApp('${escapeHtml(r.phone_number)}')" class="text-xs bg-green-600 hover:bg-green-700 text-white font-bold px-3 py-1.5 rounded-lg flex items-center gap-1"><i class="fab fa-whatsapp"></i> تواصل واتساب</button>
+                        ${r.status !== 'in_progress' ? `<button onclick="window.setCustomerRequestStatus('${r.id}', 'in_progress')" class="text-xs bg-blue-100 hover:bg-blue-200 dark:bg-blue-950/30 dark:hover:bg-blue-950/50 text-blue-700 dark:text-blue-300 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1"><i class="fa-solid fa-eye"></i> تمت المراجعة</button>` : ''}
+                        ${r.status !== 'resolved' ? `<button onclick="window.setCustomerRequestStatus('${r.id}', 'resolved')" class="text-xs bg-emerald-100 hover:bg-emerald-200 dark:bg-emerald-950/30 dark:hover:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1"><i class="fa-solid fa-check-double"></i> إنهاء الطلب</button>` : ''}
+                        <button onclick="window.deleteCustomerRequest('${r.id}')" class="text-xs bg-red-100 hover:bg-red-200 dark:bg-red-950/30 dark:hover:bg-red-950/50 text-red-600 dark:text-red-400 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1"><i class="fa-solid fa-trash"></i> حذف</button>
+                    </div>
+                </div>`;
+            }).join('');
+        };
+
+
+        window.contactRequestWhatsApp = (rawPhone) => {
+            let cp = (rawPhone || '').replace(/\D/g, '').replace(/^0+/, '');
+            if (!cp.startsWith('966') && cp.length <= 10) cp = '966' + cp;
+            window.open(`https://api.whatsapp.com/send?phone=${cp}`, '_blank');
+        };
+
+        window.setCustomerRequestStatus = async (id, status) => {
+            customerRequestsCache = customerRequestsCache.map((r) => r.id === id ? { ...r, status } : r);
+            localStorage.setItem('safwa_customer_requests', JSON.stringify(customerRequestsCache));
+            window.renderCustomerRequests();
+            window.updateRequestsBadge();
+            if (isFirebaseActive) {
+                try { await setDoc(doc(db, ...publicDataPath('customer_requests'), id), { status }, { merge: true }); }
+                catch (error) { console.error('Failed to update request status:', error); showToast('تعذر تحديث حالة الطلب سحابياً', 'error'); return; }
+            }
+            showToast('تم تحديث حالة الطلب بنجاح', 'success');
+        };
+
+        window.deleteCustomerRequest = (id) => {
+            showCustomConfirm('حذف الطلب', 'هل أنت متأكد من حذف هذا الطلب نهائياً؟', async () => {
+                customerRequestsCache = customerRequestsCache.filter((r) => r.id !== id);
+                localStorage.setItem('safwa_customer_requests', JSON.stringify(customerRequestsCache));
+                window.renderCustomerRequests();
+                window.updateRequestsBadge();
+                if (isFirebaseActive) {
+                    try { await deleteDoc(doc(db, ...publicDataPath('customer_requests'), id)); }
+                    catch (error) { console.error('Failed to delete request:', error); showToast('تعذر حذف الطلب سحابياً', 'error'); return; }
+                }
+                showToast('تم حذف الطلب', 'success');
+            });
+        };
 
         const normalizeActivityPlateSearch = (value) => (value || '').toString()
             .replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d).toString())
@@ -2829,6 +3113,7 @@
             if(unsubWorkersDirectory) unsubWorkersDirectory();
             if(unsubSiteStats) unsubSiteStats();
             if(unsubPlateSearches) unsubPlateSearches();
+            if(unsubCustomerRequests) unsubCustomerRequests();
 
             unsubSiteStats = onSnapshot(doc(db, ...publicDataPath('site_stats'), 'summary'), (snap) => {
                 renderSiteStats(snap.exists() ? snap.data() : {});
@@ -2930,6 +3215,24 @@
                 window.renderWorkersLog();
             }, (error) => {
                 console.error("Firestore Workers Directory listener error:", error);
+            });
+
+            unsubCustomerRequests = onSnapshot(collection(db, ...publicDataPath('customer_requests')), (snap) => {
+                let list = [];
+                snap.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if (data && docSnap.id) {
+                        list.push({ id: docSnap.id, ...data });
+                    }
+                });
+                list.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+                customerRequestsCache = list;
+                localStorage.setItem('safwa_customer_requests', JSON.stringify(list));
+                window.renderCustomerRequests();
+                window.updateRequestsBadge();
+            }, (error) => {
+                console.error("Firestore Customer Requests listener error:", error);
+                showToast(`خطأ قراءة الطلبات والشكاوى: ${error.message}`, "error");
             });
 
             if (currentUserRole === 'admin') {
@@ -4998,19 +5301,21 @@
             const msgMod = document.getElementById('messagingModule');
             const carsMod = document.getElementById('carsModule');
             const empMod = document.getElementById('employeesModule');
+            const reqMod = document.getElementById('requestsModule');
             if(msgMod) msgMod.classList.toggle('hidden', t !== 'messaging');
             if(carsMod) carsMod.classList.toggle('hidden', t !== 'cars');
             if(empMod) empMod.classList.toggle('hidden', t !== 'employees');
+            if(reqMod) reqMod.classList.toggle('hidden', t !== 'requests');
 
-            const tabIds = ['appTab-messaging', 'appTab-cars', 'appTab-employees'];
+            const tabIds = ['appTab-messaging', 'appTab-cars', 'appTab-employees', 'appTab-requests'];
             tabIds.forEach(id => {
                 const btn = document.getElementById(id);
                 if (btn) {
                     if (id === `appTab-${t}`) {
-                        const borderClr = t === 'cars' ? 'border-emerald-500' : (t === 'employees' ? 'border-sky-500' : 'border-safwa-gold');
-                        btn.className = `flex-grow max-w-[200px] py-2.5 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 bg-white dark:bg-slate-800 text-[#1b263b] dark:text-white shadow-md border-b-2 ${borderClr}`;
+                        const borderClr = t === 'cars' ? 'border-emerald-500' : (t === 'employees' ? 'border-sky-500' : (t === 'requests' ? 'border-red-500' : 'border-safwa-gold'));
+                        btn.className = `relative flex-grow max-w-[200px] py-2.5 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 bg-white dark:bg-slate-800 text-[#1b263b] dark:text-white shadow-md border-b-2 ${borderClr}`;
                     } else {
-                        btn.className = "flex-grow max-w-[200px] py-2.5 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 text-gray-500 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all";
+                        btn.className = "relative flex-grow max-w-[200px] py-2.5 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 text-gray-500 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all";
                     }
                 }
             });
@@ -5020,6 +5325,11 @@
                 window.renderCarsTracker();
                 window.renderDeliveredCars();
                 window.renderWorkersLog();
+            }
+
+            if (t === 'requests') {
+                window.renderCustomerRequests();
+                window.updateRequestsBadge();
             }
         };
 
@@ -5302,6 +5612,10 @@ ${JSON.stringify(currentCarsCompact)}
             renderSiteStats({ visitors: Number(localStorage.getItem('safwa_site_visitors') || 0) });
             renderPlateSearchLog();
             recordSiteVisit();
+            customerRequestsCache = JSON.parse(localStorage.getItem('safwa_customer_requests') || '[]');
+            window.renderCustomerRequests();
+            window.updateRequestsBadge();
+            window.setBookingRequestType('booking');
             window.renderCarsTracker();
             window.renderDeliveredCars();
             window.renderWorkersLog();
