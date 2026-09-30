@@ -1200,7 +1200,7 @@
                     <i class="fa-solid fa-car-on text-emerald-500"></i> إدارة السيارات
                 </button>
                 <button onclick="window.switchAppTab('employees')" id="appTab-employees" class="hidden flex-1 min-w-[120px] py-2.5 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-white">
-                    <i class="fa-solid fa-users-gear text-sky-500"></i> صلاحيات الموظفين 👥
+                    <i class="fa-solid fa-users-gear text-sky-500"></i> صلاحيات الموظفين 
                 </button>
                 <button onclick="window.switchAppTab('requests')" id="appTab-requests" class="relative flex-1 min-w-[160px] py-2.5 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-white">
                     <i class="fa-solid fa-headset text-red-500"></i> الطلبات والشكاوى
@@ -1450,6 +1450,7 @@
                     <button id="recordsViewBtn-admin" onclick="window.switchCarsRecordView('admin')" class="px-4 py-2 rounded-lg text-xs font-bold bg-[#1b263b] text-white border border-[#1b263b] shadow-sm transition">سجل السيارات الإداري</button>
                     <button id="recordsViewBtn-delivered" onclick="window.switchCarsRecordView('delivered')" class="px-4 py-2 rounded-lg text-xs font-bold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-700 transition">سجل ما بعد التسليم</button>
                     <button id="recordsViewBtn-workers" onclick="window.switchCarsRecordView('workers')" class="px-4 py-2 rounded-lg text-xs font-bold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-700 transition">سجل العمال</button>
+                    <button id="recordsViewBtn-parts" onclick="window.switchCarsRecordView('parts')" class="px-4 py-2 rounded-lg text-xs font-bold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-700 transition"><i class="fa-solid fa-gears ml-1"></i> سجل متابعة قطع الغيار</button>
                 </div>
 
                 <div id="adminCarsCard" class="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-gray-150 dark:border-slate-800 overflow-hidden text-right">
@@ -1587,6 +1588,26 @@
                         <i class="fa-solid fa-user-gear text-5xl text-gray-300 dark:text-slate-700"></i>
                         <span>لا يوجد عمال أو مهام مسجلة حالياً.</span>
                     </div>
+                </div>
+
+                <div id="partsFollowupsCard" class="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-gray-150 dark:border-slate-800 overflow-hidden text-right mt-6 hidden">
+                    <div class="p-4 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center flex-wrap gap-2 bg-amber-50/60 dark:bg-amber-950/15">
+                        <h3 class="font-bold text-slate-800 dark:text-white flex items-center gap-1.5"><i class="fa-solid fa-gears text-amber-600"></i> سجل متابعة قطع غيار السيارات</h3>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <button onclick="window.openAddPartsRepresentativeModal()" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1.5"><i class="fa-solid fa-user-plus"></i> إضافة مندوب</button>
+                            <span id="partsFollowupsTotalBadge" class="bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300 text-xs font-bold px-3 py-2 rounded border border-amber-200/70 dark:border-amber-900/60 font-tajawal">إجمالي المتابعات: 0</span>
+                        </div>
+                    </div>
+                    <div class="p-4 border-b border-gray-100 dark:border-slate-800 bg-white/90 dark:bg-slate-900/80">
+                        <input id="partsFollowupsSearchInput" type="search" oninput="window.renderPartsFollowups()" placeholder="بحث باسم المندوب..." class="w-full max-w-md px-3 py-2 text-xs rounded-lg border border-amber-200 dark:border-amber-900/60 bg-amber-50/50 dark:bg-slate-800 text-slate-800 dark:text-white outline-none focus:ring-1 focus:ring-amber-500">
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-sm">
+                            <thead class="bg-amber-50/70 dark:bg-slate-800 font-bold border-b text-xs text-amber-800 dark:text-amber-300"><tr><th class="p-3">المندوب</th><th class="p-3 text-center">السيارات</th><th class="p-3 text-center">القطع</th><th class="p-3 text-center">تفاصيل</th></tr></thead>
+                            <tbody id="partsFollowupsTableBody" class="divide-y divide-gray-150 dark:divide-slate-800"></tbody>
+                        </table>
+                    </div>
+                    <div id="noPartsFollowupsMsg" class="text-center py-10 text-gray-400 dark:text-slate-500 text-sm hidden">لا توجد متابعات لقطع الغيار حتى الآن.</div>
                 </div>
             </div>
 
@@ -1831,6 +1852,61 @@
                 <button onclick="window.closeCarWorkersModal()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-xs font-bold rounded-xl transition">إلغاء</button>
                 <button onclick="window.saveCarWorkersAssignment()" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold rounded-xl transition shadow-md shadow-sky-600/20">حفظ التوزيع</button>
             </div>
+        </div>
+    </div>
+
+    <div id="carPartsFollowupModal" class="fixed inset-0 z-[122] bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-amber-400/40 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 font-tajawal text-right">
+            <div class="flex justify-between items-center border-b border-gray-150 dark:border-slate-800 pb-3 mb-4">
+                <h3 class="font-bold text-gray-800 dark:text-white flex items-center gap-2"><i class="fa-solid fa-gears text-amber-600"></i> متابعة قطع غيار السيارة</h3>
+                <button onclick="window.closeCarPartsFollowupModal()" class="text-gray-400 hover:text-red-500" aria-label="إغلاق"><i class="fa-solid fa-times text-xl"></i></button>
+            </div>
+            <input id="partsFollowupCarId" type="hidden">
+            <div class="mb-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/40 p-3">
+                <p class="text-xs text-amber-700 dark:text-amber-300 font-bold">السيارة المحددة:</p>
+                <p id="partsFollowupCarInfo" class="text-sm font-bold text-slate-700 dark:text-slate-200 mt-1">-</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-2 sm:items-end mb-4">
+                <div class="flex-1">
+                    <label for="partsFollowupRepresentative" class="block text-xs font-bold text-gray-600 dark:text-slate-400 mb-1">المندوب *</label>
+                    <select id="partsFollowupRepresentative" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-sm rounded-lg p-2.5 outline-none dark:text-white"><option value="">اختر المندوب</option></select>
+                </div>
+                <button type="button" onclick="window.openAddPartsRepresentativeModal()" class="shrink-0 text-xs bg-slate-700 hover:bg-slate-800 text-white px-3 py-2.5 rounded-lg font-bold"><i class="fa-solid fa-user-plus ml-1"></i> مندوب جديد</button>
+            </div>
+            <div class="flex justify-between items-center gap-2 mb-2">
+                <h4 class="text-sm font-bold text-slate-700 dark:text-slate-200">القطع المطلوبة وحالتها</h4>
+                <button type="button" onclick="window.addCarPartRow()" class="text-xs bg-amber-100 hover:bg-amber-200 dark:bg-amber-950/30 text-amber-800 dark:text-amber-300 px-3 py-2 rounded-lg font-bold"><i class="fa-solid fa-plus ml-1"></i> إضافة قطعة</button>
+            </div>
+            <div id="carPartsRows" class="space-y-3"></div>
+            <div class="flex justify-end gap-3 mt-5 border-t border-slate-100 dark:border-slate-800 pt-4">
+                <button onclick="window.closeCarPartsFollowupModal()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-xs font-bold rounded-xl">إلغاء</button>
+                <button onclick="window.saveCarPartsFollowup()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl"><i class="fa-solid fa-floppy-disk ml-1"></i> حفظ المتابعة</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="addPartsRepresentativeModal" class="fixed inset-0 z-[124] bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl shadow-2xl max-w-md w-full p-5 font-tajawal text-right">
+            <div class="flex justify-between items-center border-b border-gray-150 dark:border-slate-800 pb-3 mb-4">
+                <h3 class="font-bold text-slate-800 dark:text-white"><i class="fa-solid fa-user-plus text-amber-600 ml-1"></i> إضافة مندوب جديد</h3>
+                <button onclick="window.closeAddPartsRepresentativeModal()" class="text-gray-400 hover:text-red-500" aria-label="إغلاق"><i class="fa-solid fa-times text-xl"></i></button>
+            </div>
+            <label for="newPartsRepresentativeName" class="block text-xs font-bold text-gray-600 dark:text-slate-400 mb-1">اسم المندوب *</label>
+            <input id="newPartsRepresentativeName" type="text" maxlength="100" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-sm rounded-lg p-2.5 outline-none dark:text-white" placeholder="اكتب اسم المندوب">
+            <div class="flex justify-end gap-2 mt-5">
+                <button onclick="window.closeAddPartsRepresentativeModal()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-xs font-bold rounded-xl">إلغاء</button>
+                <button onclick="window.savePartsRepresentative()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl">حفظ المندوب</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="partsRepresentativeDetailsModal" class="fixed inset-0 z-[123] bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-amber-400/40 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[88vh] flex flex-col overflow-hidden font-tajawal text-right">
+            <div class="bg-[#1b263b] text-white p-4 flex justify-between items-center border-b border-safwa-gold">
+                <h3 id="partsRepresentativeDetailsTitle" class="font-bold"><i class="fa-solid fa-user-tag text-safwa-gold ml-1"></i> تفاصيل المندوب</h3>
+                <button onclick="window.closePartsRepresentativeDetails()" class="text-gray-300 hover:text-white" aria-label="إغلاق"><i class="fa-solid fa-times text-xl"></i></button>
+            </div>
+            <div id="partsRepresentativeDetailsList" class="overflow-y-auto flex-grow p-4 space-y-3"></div>
         </div>
     </div>
 
@@ -2922,10 +2998,12 @@
         window.closeActivityLogModal = () => document.getElementById('activityLogModal').classList.add('hidden');
 
         // Realtime Listeners
-        let unsubCars = null, unsubDelivered = null, unsubHistory = null, unsubActivity = null, unsubEmployees = null, unsubAssignments = null, unsubWorkersDirectory = null, unsubCustomerRequests = null;
+        let unsubCars = null, unsubDelivered = null, unsubHistory = null, unsubActivity = null, unsubEmployees = null, unsubAssignments = null, unsubWorkersDirectory = null, unsubCustomerRequests = null, unsubPartsFollowups = null, unsubPartsRepresentatives = null;
         let activityLogCache = [];
         let workersLogIndexCache = [];
         let customerRequestsCache = [];
+        let partsFollowupsCache = [];
+        let partsRepresentativesCache = [];
 
         // بيانات وصفية لعرض شارات نوع الطلب وحالته في لوحة الطلبات والشكاوى
         const requestTypeMeta = {
@@ -3114,6 +3192,8 @@
             if(unsubSiteStats) unsubSiteStats();
             if(unsubPlateSearches) unsubPlateSearches();
             if(unsubCustomerRequests) unsubCustomerRequests();
+            if(unsubPartsFollowups) unsubPartsFollowups();
+            if(unsubPartsRepresentatives) unsubPartsRepresentatives();
 
             unsubSiteStats = onSnapshot(doc(db, ...publicDataPath('site_stats'), 'summary'), (snap) => {
                 renderSiteStats(snap.exists() ? snap.data() : {});
@@ -3216,6 +3296,30 @@
             }, (error) => {
                 console.error("Firestore Workers Directory listener error:", error);
             });
+
+            unsubPartsFollowups = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'car_parts_followups'), (snap) => {
+                const list = [];
+                snap.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if (data && docSnap.id) list.push({ id: docSnap.id, ...data });
+                });
+                list.sort((a, b) => new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0));
+                partsFollowupsCache = list;
+                localStorage.setItem('safwa_car_parts_followups', JSON.stringify(list));
+                window.renderPartsFollowups();
+            }, (error) => console.error('Firestore Parts Follow-ups listener error:', error));
+
+            unsubPartsRepresentatives = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'parts_representatives'), (snap) => {
+                const list = [];
+                snap.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if (data && docSnap.id) list.push({ id: docSnap.id, ...data });
+                });
+                partsRepresentativesCache = list.sort((a, b) => (a.name || '').localeCompare((b.name || ''), 'ar'));
+                localStorage.setItem('safwa_parts_representatives', JSON.stringify(partsRepresentativesCache));
+                window.renderPartsRepresentatives();
+                window.renderPartsFollowups();
+            }, (error) => console.error('Firestore Parts Representatives listener error:', error));
 
             unsubCustomerRequests = onSnapshot(collection(db, ...publicDataPath('customer_requests')), (snap) => {
                 let list = [];
@@ -4004,19 +4108,22 @@
         window.carRecordsView = 'admin';
 
         window.switchCarsRecordView = (view) => {
-            const targetView = view === 'delivered' ? 'delivered' : view === 'workers' ? 'workers' : 'admin';
+            const targetView = ['delivered', 'workers', 'parts'].includes(view) ? view : 'admin';
             window.carRecordsView = targetView;
 
             const adminCard = document.getElementById('adminCarsCard');
             const deliveredCard = document.getElementById('deliveredCarsCard');
             const workersCard = document.getElementById('workersLogCard');
+            const partsCard = document.getElementById('partsFollowupsCard');
             const adminBtn = document.getElementById('recordsViewBtn-admin');
             const deliveredBtn = document.getElementById('recordsViewBtn-delivered');
             const workersBtn = document.getElementById('recordsViewBtn-workers');
+            const partsBtn = document.getElementById('recordsViewBtn-parts');
 
             if (adminCard) adminCard.classList.toggle('hidden', targetView !== 'admin');
             if (deliveredCard) deliveredCard.classList.toggle('hidden', targetView !== 'delivered');
             if (workersCard) workersCard.classList.toggle('hidden', targetView !== 'workers');
+            if (partsCard) partsCard.classList.toggle('hidden', targetView !== 'parts');
 
             if (adminBtn) {
                 adminBtn.className = targetView === 'admin'
@@ -4036,9 +4143,264 @@
                     : 'px-4 py-2 rounded-lg text-xs font-bold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-700 transition';
             }
 
+            if (partsBtn) {
+                partsBtn.className = targetView === 'parts'
+                    ? 'px-4 py-2 rounded-lg text-xs font-bold bg-amber-600 text-white border border-amber-600 shadow-sm transition'
+                    : 'px-4 py-2 rounded-lg text-xs font-bold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-700 transition';
+            }
+
             if (targetView === 'workers') {
                 window.renderWorkersLog();
             }
+            if (targetView === 'parts') {
+                window.renderPartsFollowups();
+            }
+        };
+
+        const readPartsFollowups = () => {
+            try {
+                const list = JSON.parse(localStorage.getItem('safwa_car_parts_followups') || '[]');
+                return Array.isArray(list) ? list : [];
+            } catch (_) { return []; }
+        };
+
+        const readPartsRepresentatives = () => {
+            try {
+                const list = JSON.parse(localStorage.getItem('safwa_parts_representatives') || '[]');
+                return Array.isArray(list) ? list : [];
+            } catch (_) { return []; }
+        };
+
+        const partsStatusMeta = {
+            ordered: { label: 'طلبية', classes: 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300' },
+            partial: { label: 'وصل جزء وباقي جزء', classes: 'bg-sky-100 text-sky-700 dark:bg-sky-950/40 dark:text-sky-300' },
+            complete: { label: 'وصلت القطع بالكامل', classes: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300' }
+        };
+
+        window.renderPartsRepresentatives = () => {
+            const stored = readPartsRepresentatives();
+            partsRepresentativesCache = stored.sort((a, b) => (a.name || '').localeCompare((b.name || ''), 'ar'));
+            const select = document.getElementById('partsFollowupRepresentative');
+            if (!select) return;
+            const selectedValue = select.value;
+            select.innerHTML = '<option value="">اختر المندوب</option>' + partsRepresentativesCache
+                .map((rep) => `<option value="${sanitizeText(rep.id)}">${sanitizeText(rep.name)}</option>`).join('');
+            if (partsRepresentativesCache.some((rep) => rep.id === selectedValue)) select.value = selectedValue;
+        };
+
+        window.openAddPartsRepresentativeModal = () => {
+            const modal = document.getElementById('addPartsRepresentativeModal');
+            const input = document.getElementById('newPartsRepresentativeName');
+            if (!modal || !input) return;
+            input.value = '';
+            modal.classList.remove('hidden');
+            setTimeout(() => input.focus(), 50);
+        };
+
+        window.closeAddPartsRepresentativeModal = () => document.getElementById('addPartsRepresentativeModal')?.classList.add('hidden');
+
+        window.savePartsRepresentative = async () => {
+            const input = document.getElementById('newPartsRepresentativeName');
+            const name = (input?.value || '').trim().replace(/\s+/g, ' ');
+            if (!name) return showToast('اكتب اسم المندوب أولاً.', 'error');
+            const current = readPartsRepresentatives();
+            const duplicate = current.find((rep) => (rep.name || '').trim().toLowerCase() === name.toLowerCase());
+            if (duplicate) {
+                window.closeAddPartsRepresentativeModal();
+                window.renderPartsRepresentatives();
+                const select = document.getElementById('partsFollowupRepresentative');
+                if (select) select.value = duplicate.id;
+                return showToast('المندوب موجود في القائمة وتم اختياره.', 'info');
+            }
+
+            const representative = {
+                id: `representative_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+                name,
+                createdAt: new Date().toISOString()
+            };
+            const next = [representative, ...current];
+            localStorage.setItem('safwa_parts_representatives', JSON.stringify(next));
+            partsRepresentativesCache = next;
+            window.renderPartsRepresentatives();
+            const select = document.getElementById('partsFollowupRepresentative');
+            if (select) select.value = representative.id;
+            window.closeAddPartsRepresentativeModal();
+            if (isFirebaseActive) {
+                try {
+                    await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'parts_representatives', representative.id), representative);
+                } catch (error) {
+                    console.error('Failed to sync parts representative:', error);
+                    showToast('تمت إضافة المندوب محلياً لكن فشلت المزامنة السحابية.', 'error');
+                    return;
+                }
+            }
+            showToast('تمت إضافة المندوب واختياره.', 'success');
+        };
+
+        const createCarPartRow = (part = {}) => {
+            const rowId = `part_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+            const status = partsStatusMeta[part.status] ? part.status : 'ordered';
+            const needsDate = status === 'ordered';
+            return `<div data-part-row="${rowId}" class="grid grid-cols-1 sm:grid-cols-12 gap-2 items-end border border-slate-200 dark:border-slate-700 rounded-xl p-3 bg-slate-50/70 dark:bg-slate-800/40">
+                <div class="sm:col-span-4"><label class="block text-[11px] font-bold text-slate-500 mb-1">اسم القطعة *</label><input class="car-part-name w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm rounded-lg p-2 outline-none dark:text-white" maxlength="120" value="${sanitizeText(part.name || '')}" placeholder="مثال: صدام أمامي"></div>
+                <div class="sm:col-span-4"><label class="block text-[11px] font-bold text-slate-500 mb-1">الحالة</label><select class="car-part-status w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs rounded-lg p-2 outline-none dark:text-white" onchange="window.toggleCarPartArrivalDate(this)"><option value="ordered" ${status === 'ordered' ? 'selected' : ''}>طلبية</option><option value="partial" ${status === 'partial' ? 'selected' : ''}>وصل جزء وباقي جزء</option><option value="complete" ${status === 'complete' ? 'selected' : ''}>وصلت القطع بالكامل</option></select></div>
+                <div class="sm:col-span-3 car-part-date-wrap ${needsDate ? '' : 'hidden'}"><label class="block text-[11px] font-bold text-slate-500 mb-1">التاريخ المتوقع *</label><input type="date" class="car-part-arrival w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs rounded-lg p-2 outline-none dark:text-white" value="${sanitizeText(part.expectedArrival || '')}" ${needsDate ? 'required' : ''}></div>
+                <div class="sm:col-span-1 flex justify-end"><button type="button" onclick="window.removeCarPartRow('${rowId}')" class="w-9 h-9 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg" title="حذف القطعة"><i class="fa-solid fa-trash-can"></i></button></div>
+            </div>`;
+        };
+
+        window.addCarPartRow = (part = {}) => document.getElementById('carPartsRows')?.insertAdjacentHTML('beforeend', createCarPartRow(part));
+
+        window.removeCarPartRow = (rowId) => {
+            const rows = document.querySelectorAll('#carPartsRows [data-part-row]');
+            if (rows.length <= 1) return showToast('يجب تسجيل قطعة واحدة على الأقل.', 'info');
+            document.querySelector(`#carPartsRows [data-part-row="${rowId}"]`)?.remove();
+        };
+
+        window.toggleCarPartArrivalDate = (select) => {
+            const row = select.closest('[data-part-row]');
+            const dateWrap = row?.querySelector('.car-part-date-wrap');
+            const dateInput = row?.querySelector('.car-part-arrival');
+            const needsDate = select.value === 'ordered';
+            dateWrap?.classList.toggle('hidden', !needsDate);
+            if (dateInput) {
+                dateInput.required = needsDate;
+                if (!needsDate) dateInput.value = '';
+            }
+        };
+
+        window.openCarPartsFollowupModal = (carId) => {
+            const cars = getActiveCars();
+            const car = cars.find((item) => item.id === carId);
+            if (!car) return showToast('تعذر العثور على السيارة المطلوبة.', 'error');
+            const existing = readPartsFollowups().find((item) => item.carId === carId);
+            document.getElementById('partsFollowupCarId').value = carId;
+            document.getElementById('partsFollowupCarInfo').textContent = `${car.model || '-'} - ${car.plate || '-'}`;
+            window.renderPartsRepresentatives();
+            const repSelect = document.getElementById('partsFollowupRepresentative');
+            if (existing && !partsRepresentativesCache.some((rep) => rep.id === existing.representativeId)) {
+                const legacyRep = { id: existing.representativeId || `legacy_${carId}`, name: existing.representativeName || 'مندوب سابق' };
+                partsRepresentativesCache.unshift(legacyRep);
+                localStorage.setItem('safwa_parts_representatives', JSON.stringify(partsRepresentativesCache));
+                window.renderPartsRepresentatives();
+            }
+            repSelect.value = existing?.representativeId || '';
+            const partsRows = document.getElementById('carPartsRows');
+            partsRows.innerHTML = '';
+            (existing?.items?.length ? existing.items : [{}]).forEach((part) => window.addCarPartRow(part));
+            document.getElementById('carPartsFollowupModal').classList.remove('hidden');
+        };
+
+        window.closeCarPartsFollowupModal = () => document.getElementById('carPartsFollowupModal')?.classList.add('hidden');
+
+        window.saveCarPartsFollowup = async () => {
+            const carId = document.getElementById('partsFollowupCarId')?.value;
+            const car = getActiveCars().find((item) => item.id === carId);
+            const representativeId = document.getElementById('partsFollowupRepresentative')?.value || '';
+            const representative = readPartsRepresentatives().find((item) => item.id === representativeId);
+            if (!car) return showToast('السيارة المحددة لم تعد موجودة في السجل الإداري.', 'error');
+            if (!representative) return showToast('اختر المندوب أو أضف مندوباً جديداً.', 'error');
+
+            const rows = Array.from(document.querySelectorAll('#carPartsRows [data-part-row]'));
+            const items = [];
+            for (const row of rows) {
+                const name = (row.querySelector('.car-part-name')?.value || '').trim();
+                const status = row.querySelector('.car-part-status')?.value || 'ordered';
+                const expectedArrival = row.querySelector('.car-part-arrival')?.value || '';
+                if (!name) return showToast('اكتب اسم كل قطعة قبل الحفظ.', 'error');
+                if (status === 'ordered' && !expectedArrival) return showToast(`حدد التاريخ المتوقع لوصول القطعة: ${name}.`, 'error');
+                items.push({ id: `item_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`, name, status, expectedArrival: status === 'ordered' ? expectedArrival : '' });
+            }
+            if (!items.length) return showToast('أضف قطعة واحدة على الأقل.', 'error');
+
+            const previous = readPartsFollowups().find((item) => item.carId === carId);
+            const now = new Date().toISOString();
+            const followup = {
+                id: carId,
+                carId,
+                carModel: car.model || '-',
+                carPlate: car.plate || '-',
+                representativeId: representative.id,
+                representativeName: representative.name,
+                items,
+                createdAt: previous?.createdAt || now,
+                updatedAt: now,
+                updatedBy: currentUser?.email || 'unknown'
+            };
+            const records = readPartsFollowups();
+            const next = previous ? records.map((item) => item.carId === carId ? followup : item) : [followup, ...records];
+            localStorage.setItem('safwa_car_parts_followups', JSON.stringify(next));
+            partsFollowupsCache = next;
+            window.renderPartsFollowups();
+            window.closeCarPartsFollowupModal();
+            if (isFirebaseActive) {
+                try {
+                    await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'car_parts_followups', carId), followup);
+                } catch (error) {
+                    console.error('Failed to sync car parts follow-up:', error);
+                    showToast('تم حفظ المتابعة محلياً لكن فشلت المزامنة السحابية.', 'error');
+                    return;
+                }
+            }
+            logActivity('متابعة قطع غيار', `حفظ ${items.length} قطعة للمندوب ${representative.name} على السيارة ${car.model} (${car.plate})`);
+            showToast('تم حفظ متابعة قطع الغيار للسيارة.', 'success');
+        };
+
+        window.renderPartsFollowups = () => {
+            const tbody = document.getElementById('partsFollowupsTableBody');
+            const noMsg = document.getElementById('noPartsFollowupsMsg');
+            if (!tbody) return;
+            partsFollowupsCache = readPartsFollowups();
+            const activeFollowups = partsFollowupsCache.map((record) => ({
+                ...record,
+                items: (record.items || []).filter((part) => part.status !== 'complete')
+            })).filter((record) => record.items.length > 0);
+            const query = (document.getElementById('partsFollowupsSearchInput')?.value || '').trim().toLowerCase();
+            const grouped = new Map();
+            activeFollowups.forEach((record) => {
+                const key = record.representativeId || (record.representativeName || '').toLowerCase();
+                if (!key) return;
+                if (!grouped.has(key)) grouped.set(key, { name: record.representativeName || 'مندوب', records: [] });
+                grouped.get(key).records.push(record);
+            });
+            const reps = [...grouped.values()].filter((rep) => rep.name.toLowerCase().includes(query));
+            const badge = document.getElementById('partsFollowupsTotalBadge');
+            if (badge) badge.textContent = `السيارات قيد المتابعة: ${activeFollowups.length}`;
+            if (!reps.length) {
+                tbody.innerHTML = '';
+                if (noMsg) noMsg.classList.remove('hidden');
+                return;
+            }
+            if (noMsg) noMsg.classList.add('hidden');
+            window.partsRepresentativeDetailsCache = reps;
+            tbody.innerHTML = reps.map((rep, index) => {
+                const carCount = new Set(rep.records.map((record) => record.carId)).size;
+                const partCount = rep.records.reduce((sum, record) => sum + (record.items || []).length, 0);
+                return `<tr class="border-b dark:border-slate-800/50"><td class="p-3 text-xs font-bold">${sanitizeText(rep.name)}</td><td class="p-3 text-center text-xs">${carCount}</td><td class="p-3 text-center text-xs">${partCount}</td><td class="p-3 text-center"><button onclick="window.openPartsRepresentativeDetails(${index})" class="text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/30 p-2 rounded-lg" title="عرض تفاصيل السيارات والقطع"><i class="fa-solid fa-list-check"></i></button></td></tr>`;
+            }).join('');
+        };
+
+        window.openPartsRepresentativeDetails = (index) => {
+            const rep = window.partsRepresentativeDetailsCache?.[index];
+            if (!rep) return;
+            document.getElementById('partsRepresentativeDetailsTitle').innerHTML = `<i class="fa-solid fa-user-tag text-safwa-gold ml-1"></i> طلبات قطع المندوب: ${sanitizeText(rep.name)}`;
+            const activeRecords = rep.records.map((record) => ({
+                ...record,
+                items: (record.items || []).filter((part) => part.status !== 'complete')
+            })).filter((record) => record.items.length > 0);
+            document.getElementById('partsRepresentativeDetailsList').innerHTML = activeRecords.map((record) => `<article class="border border-slate-200 dark:border-slate-700 rounded-xl p-4">
+                <div class="flex flex-wrap justify-between gap-2 items-center mb-3"><div><h4 class="font-bold text-slate-800 dark:text-white">${sanitizeText(record.carModel || '-')}</h4><span class="text-xs text-slate-500">رقم اللوحة: ${sanitizeText(record.carPlate || '-')}</span></div><button onclick="window.openCarPartsFollowupModal('${sanitizeText(record.carId)}');window.closePartsRepresentativeDetails()" class="text-xs text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/30 px-3 py-2 rounded-lg"><i class="fa-solid fa-pen-to-square ml-1"></i> تعديل المتابعة</button></div>
+                <div class="space-y-2">${(record.items || []).map((part) => { const status = partsStatusMeta[part.status] || partsStatusMeta.ordered; return `<div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center bg-slate-50 dark:bg-slate-800/60 rounded-lg p-3 text-xs"><strong>${sanitizeText(part.name)}</strong><span class="justify-self-start px-2 py-1 rounded-full font-bold ${status.classes}">${status.label}</span>${part.status === 'ordered' ? `<span class="text-slate-500">الوصول المتوقع: ${sanitizeText(part.expectedArrival || '-')}</span>` : '<span></span>'}</div>`; }).join('')}</div>
+            </article>`).join('');
+            const modal = document.getElementById('partsRepresentativeDetailsModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        window.closePartsRepresentativeDetails = () => {
+            const modal = document.getElementById('partsRepresentativeDetailsModal');
+            modal?.classList.add('hidden');
+            modal?.classList.remove('flex');
         };
 
         window.setCarFilter = (key, value) => {
@@ -4174,6 +4536,7 @@
                             <div class="flex items-center justify-center gap-1.5">
                                 <button onclick="window.openEditCarModal('${c.id}')" class="text-blue-500 hover:text-blue-700 p-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-950/30 transition" title="تعديل بيانات السيارة"><i class="fa-solid fa-pen-to-square text-sm"></i></button>
                                 <button onclick="window.openCarWorkersModal('${c.id}')" class="text-sky-600 hover:text-sky-700 p-1.5 rounded-lg hover:bg-sky-50 dark:hover:bg-sky-950/30 transition" title="توزيع العمال"><i class="fa-solid fa-users-gear text-sm"></i></button>
+                                <button onclick="window.openCarPartsFollowupModal('${c.id}')" class="text-amber-600 hover:text-amber-700 p-1.5 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-950/30 transition" title="متابعة قطع الغيار"><i class="fa-solid fa-gears text-sm"></i></button>
                                 <button onclick="window.deleteCarFromTracker('${c.id}')" class="text-emerald-700 hover:text-emerald-800 p-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/20 dark:hover:bg-emerald-950/35 border border-emerald-200 dark:border-emerald-900 transition" title="تسليم بعد الإصلاح"><i class="fa-solid fa-truck-ramp-box text-sm"></i></button>
                                 <button onclick="window.deleteCarPermanentlyFromTracker('${c.id}')" class="text-rose-700 hover:text-rose-800 p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/30 transition" title="حذف نهائي"><i class="fa-solid fa-trash-can text-sm"></i></button>
                             </div>
