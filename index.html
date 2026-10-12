@@ -1277,7 +1277,7 @@
                             </div>
                             <div id="priceFieldContainer" class="flex gap-4 items-center">
                                 <div class="flex-grow"><label class="block text-sm font-medium mb-1">المبلغ المطلوب</label><input type="text" id="price" placeholder="1500" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 p-2 rounded-lg" oninput="window.updateLivePreview()"></div>
-                                <div class="mt-6"><label class="text-xs flex items-center gap-1 select-none cursor-pointer"><input type="checkbox" id="addVat" onchange="window.updateLivePreview()" class="w-4 h-4 rounded"> ضريبة 15%</label></div>
+                                <div class="mt-6"><label class="text-xs flex items-center gap-1 select-none cursor-pointer"><input type="checkbox" id="addVat" checked onchange="window.updateLivePreview()" class="w-4 h-4 rounded"> ضريبة 15%</label></div>
                             </div>
                             
                             <div id="dateTimeFieldContainer">
@@ -1442,6 +1442,11 @@
                         <div><label class="block text-xs font-medium mb-1">اسم العميل <span class="text-gray-400 font-normal">(اختياري)</span></label><input type="text" id="trackerCustomerName" placeholder="مثال: عبدالله محمد" class="w-full border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-2 rounded text-sm outline-none text-dark dark:text-white"></div>
                         <div><label class="block text-xs font-medium mb-1">رقم الجوال <span class="text-gray-400 font-normal">(اختياري)</span></label><input type="tel" id="trackerCustomerPhone" placeholder="05xxxxxxxx" class="w-full border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-2 rounded text-sm outline-none text-dark dark:text-white font-mono" dir="ltr"></div>
                     </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3">
+                        <div><label class="block text-xs font-medium mb-1">لون السيارة <span class="text-gray-400 font-normal">(اختياري)</span></label><input type="text" id="trackerCarColor" placeholder="مثال: أبيض لؤلؤي" class="w-full border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-2 rounded text-sm outline-none text-dark dark:text-white"></div>
+                        <div><label class="block text-xs font-medium mb-1">مبلغ التحمل <span class="text-gray-400 font-normal">(اختياري)</span></label><input type="number" id="trackerDeductibleAmount" min="0" step="0.01" placeholder="0.00" class="w-full border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-2 rounded text-sm outline-none text-dark dark:text-white"></div>
+                        <div><label class="block text-xs font-medium mb-1">رقم المطالبة <span class="text-gray-400 font-normal">(اختياري)</span></label><input type="text" id="trackerClaimNumber" placeholder="رقم المطالبة" class="w-full border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-2 rounded text-sm outline-none text-dark dark:text-white"></div>
+                    </div>
                     <div class="mt-3"><label class="block text-xs font-medium mb-1">ملاحظات السيارة <span class="text-gray-400 font-normal">(اختياري)</span></label><input type="text" id="trackerCarNotes" placeholder="مثال: صدمة بالرفرف، انتظار قطع غيار من الوكيل..." class="w-full border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-2 rounded text-sm outline-none text-dark dark:text-white"></div>
                     <button onclick="window.addCarToTracker()" class="mt-4 w-full bg-[#1b263b] text-white font-bold py-2 rounded shadow border border-safwa-gold/30 hover:bg-[#0d1b2a] transition-all"><i class="fa-solid fa-plus"></i> إضافة السيارة للسجل</button>
                 </div>
@@ -1471,7 +1476,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 bg-white dark:bg-slate-900 p-3 rounded-xl border dark:border-slate-800 w-full">
                             <div>
                                 <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 mb-1">البحث النصي</label>
-                                <input type="text" id="carSearchInput" oninput="window.debounceCarsTrackerRender()" placeholder="نوع السيارة، اللوحة، الملاحظات..." class="w-full bg-gray-50 dark:bg-slate-800 border dark:border-slate-700 text-xs px-2 py-1.5 rounded-lg text-dark dark:text-white outline-none focus:ring-1 focus:ring-safwa-gold">
+                                <input type="text" id="carSearchInput" oninput="window.debounceCarsTrackerRender()" placeholder="السيارة، اللوحة، جوال العميل، رقم المطالبة..." class="w-full bg-gray-50 dark:bg-slate-800 border dark:border-slate-700 text-xs px-2 py-1.5 rounded-lg text-dark dark:text-white outline-none focus:ring-1 focus:ring-safwa-gold">
                             </div>
                             <div>
                                 <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 mb-1">موقع السيارة</label>
@@ -1747,6 +1752,20 @@
                     <div>
                         <label class="block text-xs font-bold text-gray-600 dark:text-slate-400 mb-1">رقم الجوال <span class="font-normal text-gray-400">(اختياري)</span></label>
                         <input type="tel" id="editCarCustomerPhone" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-sm rounded-lg p-2.5 outline-none dark:text-white font-mono" dir="ltr">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 dark:text-slate-400 mb-1">لون السيارة <span class="font-normal text-gray-400">(اختياري)</span></label>
+                        <input type="text" id="editCarColor" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-sm rounded-lg p-2.5 outline-none dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 dark:text-slate-400 mb-1">مبلغ التحمل <span class="font-normal text-gray-400">(اختياري)</span></label>
+                        <input type="number" id="editCarDeductibleAmount" min="0" step="0.01" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-sm rounded-lg p-2.5 outline-none dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 dark:text-slate-400 mb-1">رقم المطالبة <span class="font-normal text-gray-400">(اختياري)</span></label>
+                        <input type="text" id="editCarClaimNumber" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-sm rounded-lg p-2.5 outline-none dark:text-white">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -3515,6 +3534,7 @@
             const phoneNumber = document.getElementById('phoneNumber');
             document.getElementById('customerName').value = car.customerName || '';
             document.getElementById('carModel').value = car.model || '';
+            document.getElementById('price').value = car.deductibleAmount ?? '';
 
             const supportedCountryCodes = ['966', '971', '965', '968', '974', '973', '20', '962', '964'];
             const matchedCountryCode = supportedCountryCodes.find((code) => phone.startsWith(code));
@@ -4463,7 +4483,7 @@
             const term = searchInput ? searchInput.value.trim().toLowerCase() : '';
 
             const f = cars.filter(c => {
-                const matchesSearch = (c.model || '').toLowerCase().includes(term) || (c.plate || '').toLowerCase().includes(term) || (c.notes || '').toLowerCase().includes(term);
+                const matchesSearch = (c.model || '').toLowerCase().includes(term) || (c.plate || '').toLowerCase().includes(term) || (c.customerPhone || '').toString().toLowerCase().includes(term) || (c.notes || '').toLowerCase().includes(term) || (c.carColor || '').toLowerCase().includes(term) || (c.claimNumber || '').toString().toLowerCase().includes(term) || String(c.deductibleAmount ?? '').toLowerCase().includes(term);
                 const matchesLoc = window.carFilters.location === 'all' || c.location === window.carFilters.location;
                 const matchesApp = window.carFilters.approval === 'all' || c.approval === window.carFilters.approval;
                 const matchesRep = window.carFilters.repair === 'all' || c.repairStatus === window.carFilters.repair;
@@ -4509,6 +4529,11 @@
                 const customerHtml = [];
                 if (c.customerName) customerHtml.push(`<div class="text-[10px] text-slate-600 dark:text-slate-300 mt-1"><i class="fa-solid fa-user text-[9px] ml-1"></i>${c.customerName}</div>`);
                 if (c.customerPhone) customerHtml.push(`<button type="button" onclick="window.openMessagingFromCar('${c.id}')" class="text-[10px] text-primary dark:text-blue-400 hover:text-secondary dark:hover:text-orange-300 hover:underline transition" dir="ltr" title="فتح المراسلات وتعبئة بيانات السيارة"><i class="fa-solid fa-phone text-[9px] ml-1"></i>${c.customerPhone}</button>`);
+                const vehicleDetails = [];
+                if (c.carColor) vehicleDetails.push(`اللون: ${c.carColor}`);
+                if (c.deductibleAmount !== '' && c.deductibleAmount != null) vehicleDetails.push(`مبلغ التحمل: ${c.deductibleAmount} ريال`);
+                if (c.claimNumber) vehicleDetails.push(`رقم المطالبة: ${c.claimNumber}`);
+                const vehicleDetailsHtml = vehicleDetails.length ? `<div class="text-[10px] text-slate-600 dark:text-slate-300 mt-1">${vehicleDetails.join(' <span class="mx-1 text-slate-300">|</span> ')}</div>` : '';
                 const notesHtml = c.notes ? `<br><span class="text-[10px] text-amber-700 dark:text-amber-400 font-semibold bg-amber-50 dark:bg-amber-950/30 border border-amber-200/40 px-2 py-0.5 rounded-md inline-block mt-1"><i class="fa-solid fa-sticky-note text-[9px] ml-1"></i> ${c.notes}</span>` : '';
 
                 rowsHtml.push(`
@@ -4517,6 +4542,7 @@
                             ${c.model}<br>
                             <span class="text-emerald-500 font-mono">${c.plate}</span>
                             ${customerHtml.join('')}
+                            ${vehicleDetailsHtml}
                             ${notesHtml}
                         </td>
                         <td class="p-3 text-center">
@@ -5334,7 +5360,14 @@
             const n = document.getElementById('trackerCarNotes').value.trim();
             const customerName = document.getElementById('trackerCustomerName').value.trim();
             const customerPhone = document.getElementById('trackerCustomerPhone').value.trim();
+            const carColor = document.getElementById('trackerCarColor').value.trim();
+            const deductibleInput = document.getElementById('trackerDeductibleAmount').value.trim();
+            const claimNumber = document.getElementById('trackerClaimNumber').value.trim();
             if (!m || !p) return showToast('أدخل البيانات الأساسية (السيارة واللوحة)!', 'error');
+            const deductibleAmount = deductibleInput === '' ? '' : Number(deductibleInput);
+            if (deductibleInput !== '' && (!Number.isFinite(deductibleAmount) || deductibleAmount < 0)) {
+                return showToast('أدخل مبلغ تحمل صحيحاً لا يقل عن صفر!', 'error');
+            }
 
             const currentCars = JSON.parse(localStorage.getItem('safwa_cars_tracker') || '[]');
             const duplicateCar = window.checkTrackerPlateDuplicate();
@@ -5349,6 +5382,9 @@
                 notes: n,
                 customerName,
                 customerPhone,
+                carColor,
+                deductibleAmount,
+                claimNumber,
                 location: document.getElementById('trackerLocation').value,
                 approval: document.getElementById('trackerApproval').value,
                 repairStatus: document.getElementById('trackerRepairStatus').value,
@@ -5376,6 +5412,9 @@
             document.getElementById('trackerLetter3').value = '';
             document.getElementById('trackerCustomerName').value = '';
             document.getElementById('trackerCustomerPhone').value = '';
+            document.getElementById('trackerCarColor').value = '';
+            document.getElementById('trackerDeductibleAmount').value = '';
+            document.getElementById('trackerClaimNumber').value = '';
             document.getElementById('trackerCarNotes').value = '';
             setPlateInputState('trackerCarPlate', false);
             window.checkTrackerPlateDuplicate();
@@ -5392,6 +5431,9 @@
             document.getElementById('editCarPlate').value = car.plate || '';
             document.getElementById('editCarCustomerName').value = car.customerName || '';
             document.getElementById('editCarCustomerPhone').value = car.customerPhone || '';
+            document.getElementById('editCarColor').value = car.carColor || '';
+            document.getElementById('editCarDeductibleAmount').value = car.deductibleAmount ?? '';
+            document.getElementById('editCarClaimNumber').value = car.claimNumber || '';
             document.getElementById('editCarLocation').value = car.location || 'center';
             document.getElementById('editCarApproval').value = car.approval || 'pending';
             document.getElementById('editCarRepairStatus').value = car.repairStatus || 'waiting';
@@ -5414,11 +5456,18 @@
             const notes = document.getElementById('editCarNotes').value.trim();
             const customerName = document.getElementById('editCarCustomerName').value.trim();
             const customerPhone = document.getElementById('editCarCustomerPhone').value.trim();
+            const carColor = document.getElementById('editCarColor').value.trim();
+            const deductibleInput = document.getElementById('editCarDeductibleAmount').value.trim();
+            const claimNumber = document.getElementById('editCarClaimNumber').value.trim();
             const location = document.getElementById('editCarLocation').value;
             const approval = document.getElementById('editCarApproval').value;
             const repairStatus = document.getElementById('editCarRepairStatus').value;
 
             if (!model || !plate) return showToast('الرجاء تعبئة الحقول الإجبارية (السيارة واللوحة)!', 'error');
+            const deductibleAmount = deductibleInput === '' ? '' : Number(deductibleInput);
+            if (deductibleInput !== '' && (!Number.isFinite(deductibleAmount) || deductibleAmount < 0)) {
+                return showToast('أدخل مبلغ تحمل صحيحاً لا يقل عن صفر!', 'error');
+            }
 
             const cars = JSON.parse(localStorage.getItem('safwa_cars_tracker') || '[]');
             const duplicateCar = window.checkEditCarPlateDuplicate();
@@ -5453,6 +5502,9 @@
                 notes,
                 customerName,
                 customerPhone,
+                carColor,
+                deductibleAmount,
+                claimNumber,
                 location,
                 approval,
                 repairStatus,
@@ -5550,7 +5602,7 @@
         
         window.exportToExcel = () => {
             const cars = JSON.parse(localStorage.getItem('safwa_cars_tracker')||'[]'); if(cars.length===0) return showToast('لا توجد بيانات للسيارات لتصديرها!','error');
-            let csv = '\uFEFFالسيارة والموديل,رقم اللوحة,موقع السيارة,حالة التعميد,حالة الإصلاح,الملاحظات,تاريخ الدخول\n';
+            let csv = '\uFEFFالسيارة والموديل,رقم اللوحة,موقع السيارة,حالة التعميد,حالة الإصلاح,الملاحظات,تاريخ الدخول,لون السيارة,مبلغ التحمل,رقم المطالبة\n';
             
             const locMap = { 'center': 'بالمركز', 'customer': 'مع العميل' };
             const appMap = { 'pending': 'بانتظار التعميد', 'approved': 'تم التعميد', 'none': 'لم يتم' };
@@ -5563,12 +5615,15 @@
                 const app = appMap[c.approval] || c.approval || 'غير محدد';
                 const rep = repMap[c.repairStatus] || c.repairStatus || 'غير محدد';
                 const notes = `"${(c.notes || '').replace(/"/g, '""')}"`;
+                const carColor = `"${(c.carColor || '').replace(/"/g, '""')}"`;
+                const deductibleAmount = c.deductibleAmount ?? '';
+                const claimNumber = `"${(c.claimNumber || '').replace(/"/g, '""')}"`;
                 
                 let dtObj = new Date(c.date);
                 if (isNaN(dtObj.getTime())) dtObj = new Date();
                 const dateStr = dtObj.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' });
                 
-                csv += `${model},${plate},${loc},${app},${rep},${notes},${dateStr}\n`;
+                csv += `${model},${plate},${loc},${app},${rep},${notes},${dateStr},${carColor},${deductibleAmount},${claimNumber}\n`;
             });
             
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -5630,7 +5685,10 @@
                         approval: { 'بانتظار التعميد': 'pending', 'تم التعميد': 'approved', 'لم يتم': 'none' }[row[3] ? row[3].trim() : 'بانتظار التعميد'] || 'pending',
                         repairStatus: { 'بانتظار الإصلاح': 'waiting', 'انتظار القطع': 'waiting_for_parts', 'تحت الإصلاح': 'repairing', 'السيارة جاهزة': 'ready' }[row[4] ? row[4].trim() : 'بانتظار الإصلاح'] || 'waiting',
                         notes: row[5] ? row[5].replace(/"/g, '').trim() : '',
-                        date: rawDate && !isNaN(new Date(rawDate).getTime()) ? new Date(rawDate).toISOString() : new Date().toISOString()
+                        date: rawDate && !isNaN(new Date(rawDate).getTime()) ? new Date(rawDate).toISOString() : new Date().toISOString(),
+                        carColor: row[7] ? row[7].replace(/"/g, '').trim() : '',
+                        deductibleAmount: row[8] && row[8].trim() !== '' && Number.isFinite(Number(row[8])) && Number(row[8]) >= 0 ? Number(row[8]) : '',
+                        claimNumber: row[9] ? row[9].replace(/"/g, '').trim() : ''
                     };
 
                     c.lastLocationUpdatedAt = c.date;
