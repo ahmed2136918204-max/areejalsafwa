@@ -417,7 +417,7 @@
                                     <i class="fas fa-search"></i> بحث
                                 </button>
                             </div>
-                            <div id="vehicleStatusResult" class="mt-5 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm min-h-[180px] dark:bg-slate-800 dark:border-slate-700">
+                            <div id="vehicleStatusResult" role="status" aria-live="polite" aria-busy="false" class="mt-5 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm min-h-[180px] dark:bg-slate-800 dark:border-slate-700">
                                 <div class="flex items-center gap-2 text-slate-500 text-sm dark:text-slate-400">
                                     <i class="fas fa-search text-primary dark:text-blue-400"></i>
                                     <span>أدخل رقم اللوحة لعرض حالة السيارة.</span>
@@ -1355,6 +1355,9 @@
                         <h3 class="font-bold text-base"><i class="fa-solid fa-history text-safwa-gold"></i> سجل المراسلات اليومي</h3>
                         <button onclick="window.triggerClearHistoryModal()" class="text-xs text-red-500 font-bold"><i class="fa-solid fa-trash"></i> مسح السجل</button>
                     </div>
+                    <div class="mb-3">
+                        <input id="historySearchInput" type="search" oninput="window.renderHistoryLog()" placeholder="ابحث برقم اللوحة أو رقم جوال العميل..." aria-label="البحث برقم اللوحة أو رقم جوال العميل" class="w-full sm:max-w-md bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-sm rounded-xl px-3 py-2.5 outline-none focus:ring-2 focus:ring-safwa-gold/50 dark:text-white">
+                    </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-right text-xs">
                             <thead class="bg-slate-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 font-bold border-b dark:border-slate-700">
@@ -1365,7 +1368,7 @@
                     </div>
                     <div id="noHistoryMsg" class="text-center py-10 text-gray-400 dark:text-slate-500 text-xs flex flex-col items-center gap-2.5 hidden font-bold">
                         <i class="fa-solid fa-box-open text-4xl text-gray-300 dark:text-slate-800 mb-2"></i>
-                        لم يتم تسجيل مراسلات بعد.
+                        <span id="noHistoryMsgText">لم يتم تسجيل مراسلات بعد.</span>
                     </div>
                 </section>
             </div>
@@ -1463,8 +1466,8 @@
                         <div class="flex justify-between items-center w-full flex-wrap gap-2">
                             <h3 class="font-bold text-slate-800 dark:text-white flex items-center gap-1.5"><i class="fa-solid fa-list-check text-safwa-gold"></i> سجل السيارات الإداري</h3>
                             <div class="flex gap-2 items-center flex-wrap">
-                                <button onclick="window.openActivityLogModal()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 shadow-sm"><i class="fa-solid fa-eye"></i> سجل النشاط</button>
-                                <button onclick="window.openPlateSearchLogModal()" class="bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 shadow-sm"><i class="fa-solid fa-magnifying-glass"></i> سجل بحث اللوحات</button>
+                                <button onclick="window.openActivityLogModal()" class="bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 shadow-sm"><i class="fa-solid fa-eye"></i> سجل النشاط</button>
+                                <button onclick="window.openPlateSearchLogModal()" class="bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 shadow-sm"><i class="fa-solid fa-magnifying-glass"></i> سجل بحث اللوحات</button>
                                 <button onclick="window.exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded-lg shadow-sm transition-all flex items-center gap-1.5"><i class="fa-solid fa-file-excel"></i> تصدير إكسل</button>
                                 <button onclick="window.triggerCSVUpload()" class="bg-indigo-650 hover:bg-indigo-700 text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-900 text-xs font-bold px-3 py-2 rounded-lg shadow-sm transition-all flex items-center gap-1.5"><i class="fa-solid fa-file-import"></i> استيراد إكسل</button>
                                 <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="window.importFromCSV(event)">
@@ -1724,8 +1727,8 @@
     <!-- ========================================================================= -->
     <!-- نوافذ منبثقة (Modals & Toasts) -->
     <!-- نافذة تعديل بيانات السيارة (Edit Car Modal) -->
-    <div id="editCarModal" class="fixed inset-0 z-[110] bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-white dark:bg-slate-900 border border-safwa-gold/50 rounded-2xl shadow-2xl max-w-lg w-full p-6 font-tajawal transform scale-95 transition-transform duration-300 text-right">
+    <div id="editCarModal" class="fixed inset-0 z-[110] bg-black/70 backdrop-blur-sm hidden flex items-center justify-center overflow-y-auto overscroll-contain p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-900 border border-safwa-gold/50 rounded-2xl shadow-2xl max-w-lg w-full max-h-[calc(100vh-2rem)] overflow-y-auto overscroll-contain p-6 font-tajawal transform scale-95 transition-transform duration-300 text-right">
             <div class="flex justify-between items-center border-b border-gray-150 dark:border-slate-800 pb-3 mb-4">
                 <h3 class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
                     <i class="fa-solid fa-edit text-safwa-gold text-lg"></i> تعديل بيانات السيارة
@@ -1840,8 +1843,8 @@
         </div>
     </div>
 
-    <div id="carWorkersModal" class="fixed inset-0 z-[115] bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-white dark:bg-slate-900 border border-sky-400/40 rounded-2xl shadow-2xl max-w-3xl w-full p-6 font-tajawal transform scale-95 transition-transform duration-300 text-right max-h-[90vh] overflow-y-auto">
+    <div id="carWorkersModal" class="fixed inset-0 z-[115] bg-black/70 backdrop-blur-sm hidden flex items-center justify-center overflow-y-auto overscroll-contain p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-900 border border-sky-400/40 rounded-2xl shadow-2xl max-w-3xl w-full p-6 font-tajawal transform scale-95 transition-transform duration-300 text-right max-h-[90vh] overflow-y-auto overscroll-contain">
             <div class="flex justify-between items-center border-b border-gray-150 dark:border-slate-800 pb-3 mb-4">
                 <h3 class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
                     <i class="fa-solid fa-helmet-safety text-sky-600 text-lg"></i> توزيع العمال على السيارة
@@ -2421,20 +2424,25 @@
             `).join('');
         };
 
+        window.syncModalPageScroll = () => {
+            const hasOpenModal = document.querySelector('.fixed.inset-0:not(.hidden)');
+            document.body.classList.toggle('overflow-hidden', !!hasOpenModal);
+        };
+
         window.openCompanyShowcaseLightbox = (index = 0) => {
             const modal = document.getElementById('companyShowcaseModal');
             if (!modal) return;
             activeCompanyShowcaseIndex = Math.max(0, Math.min(index, companyShowcaseImages.length - 1));
             renderCompanyShowcaseLightbox();
             modal.classList.remove('hidden');
-            document.body.classList.add('overflow-hidden');
+            window.syncModalPageScroll();
         };
 
         window.closeCompanyShowcaseLightbox = () => {
             const modal = document.getElementById('companyShowcaseModal');
             if (!modal) return;
             modal.classList.add('hidden');
-            document.body.classList.remove('overflow-hidden');
+            window.syncModalPageScroll();
         };
 
         window.nextCompanyShowcaseImage = () => {
@@ -2525,13 +2533,16 @@
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#39;');
 
+        let vehicleStatusSearchId = 0;
         window.trackVehicleStatus = async () => {
             const input = document.getElementById('customerPlateInput');
             const resultBox = document.getElementById('vehicleStatusResult');
             if (!input || !resultBox) return;
 
+            const searchId = ++vehicleStatusSearchId;
             const query = normalizePlateValue(input.value);
             if (!query) {
+                resultBox.setAttribute('aria-busy', 'false');
                 resultBox.innerHTML = `
                     <div class="text-sm text-red-600 flex items-start gap-2">
                         <i class="fas fa-exclamation-circle mt-0.5"></i>
@@ -2540,63 +2551,88 @@
                 return;
             }
 
-            const cars = await window.loadPublicVehicleData();
-            const match = cars.find((car) => {
-                const plate = normalizePlateValue(car.plate || '');
-                const plateNoSpaces = plate.replace(/\s+/g, '');
-                const queryNoSpaces = query.replace(/\s+/g, '');
-                return plate === query || plateNoSpaces === queryNoSpaces || plate.includes(query) || plateNoSpaces.includes(queryNoSpaces);
-            });
-
-            if (typeof window.recordPlateSearch === 'function') {
-                window.recordPlateSearch(query, Boolean(match));
-            }
-
-            if (!match) {
-                resultBox.innerHTML = `
-                    <div class="text-sm text-slate-600 leading-relaxed text-right">
-                        <div class="flex items-center gap-2 text-amber-600 font-bold mb-3">
-                            <i class="fas fa-circle-info"></i>
-                            <span>لم يتم العثور على سيارة بهذا الرقم في سجلاتنا.</span>
-                        </div>
-                        <p class="text-slate-500">إذا كانت السيارة حديثة، يرجى التواصل مع الإدارة للتأكد من تسجيلها في النظام، او تم تسليمها للعميل.</p>
-                    </div>`;
-                return;
-            }
-
-            const statusMap = {
-                approved: '✅ معتمدة',
-                pending: '⏳ بانتظار التعميد',
-                none: '❌ لم يتم التعميد'
-            };
-            const repairMap = {
-                ready: '✨ جاهزة للاستلام',
-                repairing: '🔧 تحت الإصلاح',
-                waiting: '⏳ بانتظار الإصلاح',
-                waiting_for_parts: '🧩 انتظار القطع'
-            };
-            const locationMap = {
-                center: '🏢 بالمركز',
-                customer: '🚗 مع العميل'
-            };
-
-            const dateText = match.date ? new Date(match.date).toLocaleDateString('ar-EG', {year:'numeric', month:'short', day:'numeric'}) : 'غير محدد';
-            const notesText = match.notes ? `<div class="mt-3 rounded-xl bg-amber-50 border border-amber-200 px-3 py-2 text-xs text-amber-800 text-right"><i class="fas fa-sticky-note ml-1"></i>${escapeHtml(match.notes)}</div>` : '';
-
+            resultBox.setAttribute('aria-busy', 'true');
             resultBox.innerHTML = `
-                <div class="space-y-3 text-right">
-                    <div class="flex items-center justify-between gap-3">
-                        <h4 class="text-lg font-black text-slate-800 dark:text-white">${escapeHtml(match.model || 'سيارة غير مسجلة')}</h4>
-                        <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">${escapeHtml(match.plate || query)}</span>
-                    </div>
-                    <div class="grid grid-cols-1 gap-2 text-sm text-slate-600 dark:text-slate-350">
-                        <div class="flex justify-between border-b border-slate-100 dark:border-slate-700 pb-2"><span class="font-bold text-slate-700 dark:text-slate-200">الموقع:</span><span>${escapeHtml(locationMap[match.location] || match.location || 'غير محدد')}</span></div>
-                        <div class="flex justify-between border-b border-slate-100 dark:border-slate-700 pb-2"><span class="font-bold text-slate-700 dark:text-slate-200">حالة التعميد:</span><span>${escapeHtml(statusMap[match.approval] || match.approval || 'غير محدد')}</span></div>
-                        <div class="flex justify-between border-b border-slate-100 dark:border-slate-700 pb-2"><span class="font-bold text-slate-700 dark:text-slate-200">حالة الإصلاح:</span><span>${escapeHtml(repairMap[match.repairStatus] || match.repairStatus || 'غير محدد')}</span></div>
-                        <div class="flex justify-between"><span class="font-bold text-slate-700 dark:text-slate-200">تاريخ الدخول:</span><span>${escapeHtml(dateText)}</span></div>
-                    </div>
-                    ${notesText}
+                <div class="flex min-h-[140px] flex-col items-center justify-center gap-3 text-primary dark:text-blue-400">
+                    <i class="fas fa-circle-notch fa-spin text-3xl" aria-hidden="true"></i>
+                    <span class="text-sm font-bold" role="status">جاري البحث عن بيانات السيارة...</span>
                 </div>`;
+
+            try {
+                const cars = await window.loadPublicVehicleData();
+                if (searchId !== vehicleStatusSearchId) return;
+
+                const match = cars.find((car) => {
+                    const plate = normalizePlateValue(car.plate || '');
+                    const plateNoSpaces = plate.replace(/\s+/g, '');
+                    const queryNoSpaces = query.replace(/\s+/g, '');
+                    return plate === query || plateNoSpaces === queryNoSpaces || plate.includes(query) || plateNoSpaces.includes(queryNoSpaces);
+                });
+
+                if (typeof window.recordPlateSearch === 'function') {
+                    window.recordPlateSearch(query, Boolean(match));
+                }
+
+                if (!match) {
+                    resultBox.innerHTML = `
+                        <div class="text-sm text-slate-600 leading-relaxed text-right">
+                            <div class="flex items-center gap-2 text-amber-600 font-bold mb-3">
+                                <i class="fas fa-circle-info"></i>
+                                <span>لم يتم العثور على سيارة بهذا الرقم في سجلاتنا.</span>
+                            </div>
+                            <p class="text-slate-500">إذا كانت السيارة حديثة، يرجى التواصل مع الإدارة للتأكد من تسجيلها في النظام، او تم تسليمها للعميل.</p>
+                        </div>`;
+                    return;
+                }
+
+                const statusMap = {
+                    approved: '✅ معتمدة',
+                    pending: '⏳ بانتظار التعميد',
+                    none: '❌ لم يتم التعميد'
+                };
+                const repairMap = {
+                    ready: '✨ جاهزة للاستلام',
+                    repairing: '🔧 تحت الإصلاح',
+                    waiting: '⏳ بانتظار الإصلاح',
+                    waiting_for_parts: '🧩 انتظار القطع'
+                };
+                const locationMap = {
+                    center: '🏢 بالمركز',
+                    customer: '🚗 مع العميل'
+                };
+
+                const dateText = match.date ? new Date(match.date).toLocaleDateString('ar-EG', {year:'numeric', month:'short', day:'numeric'}) : 'غير محدد';
+                const notesText = match.notes ? `<div class="mt-3 rounded-xl bg-amber-50 border border-amber-200 px-3 py-2 text-xs text-amber-800 text-right"><i class="fas fa-sticky-note ml-1"></i>${escapeHtml(match.notes)}</div>` : '';
+
+                resultBox.innerHTML = `
+                    <div class="space-y-3 text-right">
+                        <div class="flex items-center justify-between gap-3">
+                            <h4 class="text-lg font-black text-slate-800 dark:text-white">${escapeHtml(match.model || 'سيارة غير مسجلة')}</h4>
+                            <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">${escapeHtml(match.plate || query)}</span>
+                        </div>
+                        <div class="grid grid-cols-1 gap-2 text-sm text-slate-600 dark:text-slate-350">
+                            <div class="flex justify-between border-b border-slate-100 dark:border-slate-700 pb-2"><span class="font-bold text-slate-700 dark:text-slate-200">الموقع:</span><span>${escapeHtml(locationMap[match.location] || match.location || 'غير محدد')}</span></div>
+                            <div class="flex justify-between border-b border-slate-100 dark:border-slate-700 pb-2"><span class="font-bold text-slate-700 dark:text-slate-200">حالة التعميد:</span><span>${escapeHtml(statusMap[match.approval] || match.approval || 'غير محدد')}</span></div>
+                            <div class="flex justify-between border-b border-slate-100 dark:border-slate-700 pb-2"><span class="font-bold text-slate-700 dark:text-slate-200">حالة الإصلاح:</span><span>${escapeHtml(repairMap[match.repairStatus] || match.repairStatus || 'غير محدد')}</span></div>
+                            <div class="flex justify-between"><span class="font-bold text-slate-700 dark:text-slate-200">تاريخ الدخول:</span><span>${escapeHtml(dateText)}</span></div>
+                        </div>
+                        ${notesText}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Failed to search vehicle status:', error);
+                if (searchId === vehicleStatusSearchId) {
+                    resultBox.innerHTML = `
+                        <div class="text-sm text-red-600 flex items-start gap-2">
+                            <i class="fas fa-exclamation-circle mt-0.5"></i>
+                            <span>تعذر تحميل بيانات السيارة حالياً. يرجى المحاولة مرة أخرى.</span>
+                        </div>`;
+                }
+            } finally {
+                if (searchId === vehicleStatusSearchId) {
+                    resultBox.setAttribute('aria-busy', 'false');
+                }
+            }
         };
 
         window.toggleFAQ = (button) => {
@@ -3658,12 +3694,28 @@
         function renderHistoryLog() {
             const h = JSON.parse(localStorage.getItem('safwa_history_log')||'[]'); const tb = document.getElementById('historyTableBody');
             const noHistoryMsg = document.getElementById('noHistoryMsg');
+            const noHistoryMsgText = document.getElementById('noHistoryMsgText');
 
             if (!tb) return;
 
-            if(h.length===0){ 
-                tb.innerHTML=''; 
-                if(noHistoryMsg) noHistoryMsg.classList.remove('hidden'); 
+            const searchValue = normalizePlateValue(document.getElementById('historySearchInput')?.value || '').replace(/\s+/g, '');
+            const searchDigits = searchValue.replace(/\D/g, '');
+            const filteredHistory = searchValue
+                ? h.filter((entry) => {
+                    const plate = normalizePlateValue(entry.plate || '').replace(/\s+/g, '');
+                    const phone = normalizePlateValue(entry.phone || '').replace(/\D/g, '');
+                    return plate.includes(searchValue) || (/^\d+$/.test(searchValue) && phone.includes(searchDigits));
+                })
+                : h;
+
+            if(filteredHistory.length===0){
+                tb.innerHTML='';
+                if(noHistoryMsgText) {
+                    noHistoryMsgText.textContent = h.length === 0
+                        ? 'لم يتم تسجيل مراسلات بعد.'
+                        : 'لا توجد مراسلات تطابق رقم اللوحة أو رقم العميل.';
+                }
+                if(noHistoryMsg) noHistoryMsg.classList.remove('hidden');
                 return; 
             }
             if(noHistoryMsg) noHistoryMsg.classList.add('hidden');
@@ -3672,7 +3724,7 @@
             const badgeStyles = { ready: 'bg-emerald-100 text-emerald-800', insurance: 'bg-amber-100 text-amber-800', docs: 'bg-sky-100 text-sky-800', survey: 'bg-purple-100 text-purple-800', review: 'bg-yellow-100 text-yellow-800' };
 
             let tableHtml='';
-            h.slice(0,50).forEach(i=>{ 
+            filteredHistory.slice(0,50).forEach(i=>{
                 let dt = new Date(i.timestamp);
                 if (isNaN(dt.getTime())) dt = new Date();
                 
@@ -5028,12 +5080,14 @@
             }
 
             modal.classList.remove('hidden');
+            window.syncModalPageScroll();
         };
 
         window.closeCarWorkersModal = () => {
             const modal = document.getElementById('carWorkersModal');
             if (!modal) return;
             modal.classList.add('hidden');
+            window.syncModalPageScroll();
         };
 
         window.saveCarWorkersAssignment = async () => {
@@ -5441,12 +5495,18 @@
             setPlateInputState('editCarPlate', false);
 
             const modal = document.getElementById('editCarModal');
-            if (modal) modal.classList.remove('hidden');
+            if (modal) {
+                modal.classList.remove('hidden');
+                window.syncModalPageScroll();
+            }
         };
 
         window.closeEditCarModal = () => {
             const modal = document.getElementById('editCarModal');
-            if (modal) modal.classList.add('hidden');
+            if (modal) {
+                modal.classList.add('hidden');
+                window.syncModalPageScroll();
+            }
         };
 
         window.saveEditedCar = async () => {
