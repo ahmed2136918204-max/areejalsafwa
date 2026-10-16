@@ -1224,7 +1224,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-6 text-right">
-                    <div class="md:col-span-7 bg-white dark:bg-slate-900 rounded-2xl shadow-lg p-5 border border-gray-100 dark:border-slate-800">
+                    <div id="messagingFormCard" class="md:col-span-7 bg-white dark:bg-slate-900 rounded-2xl shadow-lg p-5 border border-gray-100 dark:border-slate-800">
                         <div class="flex justify-between items-center border-b border-gray-100 dark:border-slate-800 pb-4 mb-4">
                             <h2 id="formTitle" class="text-base sm:text-lg font-bold"><i class="fa-solid fa-file-invoice text-safwa-gold"></i> تعبئة المراسلة</h2>
                             <button onclick="window.clearFields()" class="text-xs text-red-500 hover:text-red-700 font-bold"><i class="fa-solid fa-trash-can"></i> مسح الحقول</button>
@@ -1232,7 +1232,13 @@
                         
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-medium mb-1">رقم الواتساب <span class="text-red-500">*</span></label>
+                                <div class="flex items-center justify-between mb-1">
+                                    <label for="phoneNumber" class="block text-sm font-medium">رقم الواتساب <span class="text-red-500">*</span></label>
+                                    <button type="button" onclick="window.callMessagingPhone()" class="inline-flex items-center gap-1 rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-[11px] font-bold text-emerald-700 transition hover:bg-emerald-100 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-emerald-900/60" aria-label="الاتصال برقم العميل">
+                                        <i class="fa-solid fa-phone"></i>
+                                        اتصال
+                                    </button>
+                                </div>
                                 <div class="flex gap-2">
                                     <select id="countryCode" class="bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 dark:text-white rounded-lg p-2.5 text-sm w-28">
                                         <option value="966" selected>السعودية (966+)</option>
@@ -1541,15 +1547,14 @@
                             <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 mb-1">البحث عن سيارة داخل سجل ما بعد التسليم</label>
                             <div class="relative max-w-md">
                                 <i class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 text-xs"></i>
-                                <input id="deliveredCarSearchInput" type="text" oninput="window.renderDeliveredCars()" placeholder="ابحث بالسيارة أو اللوحة أو الملاحظات..." class="w-full pr-8 pl-3 py-2 text-xs rounded-lg border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/50 dark:bg-slate-800 text-slate-800 dark:text-white outline-none focus:ring-1 focus:ring-emerald-500">
+                                <input id="deliveredCarSearchInput" type="search" oninput="window.renderDeliveredCars()" placeholder="ابحث بالسيارة أو اللوحة أو رقم المطالبة أو الجوال..." class="w-full pr-8 pl-3 py-2 text-xs rounded-lg border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/50 dark:bg-slate-800 text-slate-800 dark:text-white outline-none focus:ring-1 focus:ring-emerald-500">
                             </div>
                         </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-right text-sm">
                             <thead class="bg-emerald-50/70 dark:bg-slate-800 font-bold border-b text-xs text-emerald-700 dark:text-emerald-300">
                                 <tr>
-                                    <th class="p-3">السيارة واللوحة</th>
-                                    <th class="p-3 text-center">الملاحظات</th>
+                                    <th class="p-3">السيارة وبياناتها الكاملة</th>
                                     <th class="p-3 text-center">تاريخ الدخول</th>
                                     <th class="p-3 text-center">تاريخ التسليم</th>
                                     <th class="p-3 text-center">إجراءات</th>
@@ -2988,12 +2993,14 @@
                     const pubSite = document.getElementById('publicWebsite');
                     const mainApp = document.getElementById('mainAppWrapper');
                     const floatingWa = document.getElementById('floatingWhatsapp');
+                    const aiChatbot = document.getElementById('aiChatbotContainer');
                     
                     const loginSec = document.getElementById('loginSection');
                     const regSec = document.getElementById('registerSection');
                     const pendingSec = document.getElementById('pendingApprovalSection');
 
                     if (user) {
+                        if (aiChatbot) aiChatbot.classList.add('hidden');
                         const userDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', user.uid);
                         let userSnap = await getDoc(userDocRef);
 
@@ -3059,9 +3066,11 @@
                             window.openAuthScreen();
                         }
                     } else {
+                        stopRealtimeListeners();
                         currentUser = null;
                         currentUserRole = 'employee';
                         isFirebaseActive = false;
+                        if (aiChatbot) aiChatbot.classList.remove('hidden');
                         
                         if (pendingSec) pendingSec.classList.add('hidden');
                         if (loginSec) loginSec.classList.remove('hidden');
@@ -3129,6 +3138,28 @@
         let customerRequestsCache = [];
         let partsFollowupsCache = [];
         let partsRepresentativesCache = [];
+
+        function stopRealtimeListeners() {
+            [
+                unsubCars,
+                unsubDelivered,
+                unsubHistory,
+                unsubActivity,
+                unsubEmployees,
+                unsubAssignments,
+                unsubWorkersDirectory,
+                unsubCustomerRequests,
+                unsubPartsFollowups,
+                unsubPartsRepresentatives,
+                unsubSiteStats,
+                unsubPlateSearches
+            ].forEach((unsubscribe) => unsubscribe?.());
+
+            unsubCars = unsubDelivered = unsubHistory = unsubActivity = unsubEmployees = null;
+            unsubAssignments = unsubWorkersDirectory = unsubCustomerRequests = null;
+            unsubPartsFollowups = unsubPartsRepresentatives = null;
+            unsubSiteStats = unsubPlateSearches = null;
+        }
 
         // بيانات وصفية لعرض شارات نوع الطلب وحالته في لوحة الطلبات والشكاوى
         const requestTypeMeta = {
@@ -3307,18 +3338,7 @@
             tbody.innerHTML = h;
         };
         function setupRealtimeListeners() {
-            if(unsubCars) unsubCars();
-            if(unsubDelivered) unsubDelivered();
-            if(unsubHistory) unsubHistory();
-            if(unsubActivity) unsubActivity();
-            if(unsubEmployees) unsubEmployees();
-            if(unsubAssignments) unsubAssignments();
-            if(unsubWorkersDirectory) unsubWorkersDirectory();
-            if(unsubSiteStats) unsubSiteStats();
-            if(unsubPlateSearches) unsubPlateSearches();
-            if(unsubCustomerRequests) unsubCustomerRequests();
-            if(unsubPartsFollowups) unsubPartsFollowups();
-            if(unsubPartsRepresentatives) unsubPartsRepresentatives();
+            stopRealtimeListeners();
 
             unsubSiteStats = onSnapshot(doc(db, ...publicDataPath('site_stats'), 'summary'), (snap) => {
                 renderSiteStats(snap.exists() ? snap.data() : {});
@@ -3661,6 +3681,12 @@
             document.getElementById('letter3').value = plateLetters[0] || '';
             window.switchTab('ready');
             updateLivePreview();
+            requestAnimationFrame(() => {
+                document.getElementById('messagingFormCard')?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
             showToast('تم نقل بيانات السيارة إلى المراسلات بنجاح.', 'success');
         }
         window.openMessagingFromCar = openMessagingFromCar;
@@ -3676,6 +3702,23 @@
 
         function validatePhoneNumberLive() { const p = document.getElementById('phoneNumber').value.replace(/\D/g,''); return p.length >= 9; }
         window.validatePhoneNumberLive = validatePhoneNumberLive;
+
+        window.callMessagingPhone = () => {
+            const phoneInput = document.getElementById('phoneNumber');
+            const countryCodeInput = document.getElementById('countryCode');
+            const rawPhone = (phoneInput?.value || '')
+                .replace(/[٠-٩]/g, (digit) => '٠١٢٣٤٥٦٧٨٩'.indexOf(digit).toString())
+                .replace(/[۰-۹]/g, (digit) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(digit).toString());
+            let phone = rawPhone.replace(/\D/g, '').replace(/^0+/, '');
+            const countryCode = (countryCodeInput?.value || '').replace(/\D/g, '');
+            if (phone.length < 9 || !countryCode) {
+                showToast('أدخل رقم جوال صحيحاً أولاً للاتصال.', 'error');
+                phoneInput?.focus();
+                return;
+            }
+            if (!phone.startsWith(countryCode)) phone = countryCode + phone;
+            window.location.href = `tel:+${phone}`;
+        };
 
         function validateNumbersInput(el) { el.value = el.value.replace(/\D/g,''); updateLivePreview(); }
         window.validateNumbersInput = validateNumbersInput;
@@ -5338,12 +5381,15 @@
             const noMsg = document.getElementById('noDeliveredCarsMsg');
             const badge = document.getElementById('deliveredTotalBadge');
             const searchInput = document.getElementById('deliveredCarSearchInput');
-            const query = (searchInput?.value || '').trim().toLowerCase();
+            const normalizeSearch = (value) => String(value ?? '')
+                .normalize('NFKC')
+                .toLocaleLowerCase('ar')
+                .replace(/[٠-٩]/g, (digit) => String(digit.charCodeAt(0) - 1632))
+                .replace(/[۰-۹]/g, (digit) => String(digit.charCodeAt(0) - 1776));
+            const query = normalizeSearch(searchInput?.value || '').trim();
             const filteredDeliveredCars = deliveredCars.filter((car) => {
                 if (!query) return true;
-                return [car.model, car.plate, car.notes]
-                    .filter(Boolean)
-                    .some((value) => String(value).toLowerCase().includes(query));
+                return normalizeSearch(JSON.stringify(car)).includes(query);
             });
 
             if (badge) {
@@ -5362,7 +5408,7 @@
 
             if (filteredDeliveredCars.length === 0) {
                 tableBody.innerHTML = '';
-                if (noMsg) noMsg.querySelector('span').textContent = 'لا توجد نتائج مطابقة لبحث السيارة في سجل ما بعد التسليم.';
+                if (noMsg) noMsg.querySelector('span').textContent = 'لا توجد نتائج مطابقة للسيارة أو اللوحة أو رقم المطالبة أو الجوال.';
                 if (noMsg) noMsg.classList.remove('hidden');
                 return;
             }
@@ -5379,15 +5425,39 @@
                 let deliveredDate = new Date(c.deliveredAt || c.timestamp || Date.now());
                 if (isNaN(deliveredDate.getTime())) deliveredDate = new Date();
                 const deliveredDateStr = deliveredDate.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }) + ' - ' + deliveredDate.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
-                const notesText = c.notes ? c.notes : '-';
+                const assignments = Array.isArray(c.assignments) ? c.assignments : [];
+                const workersText = assignments.length
+                    ? assignments.map((assignment) => {
+                        const workerName = assignment.workerName || assignment.name || 'عامل';
+                        return `${workerName}${assignment.hours ? ` (${assignment.hours} ساعة)` : ''}`;
+                    }).join('، ')
+                    : '';
+                const details = [
+                    ['اسم العميل', c.customerName],
+                    ['رقم الجوال', c.customerPhone || c.phoneNumber || c.phone],
+                    ['رقم المطالبة', c.claimNumber],
+                    ['لون السيارة', c.carColor],
+                    ['مبلغ التحمل', c.deductibleAmount !== '' && c.deductibleAmount != null ? `${c.deductibleAmount} ريال` : ''],
+                    ['ملاحظات السيارة', c.notes],
+                    ['العمال المسندون', workersText]
+                ];
+                const detailsHtml = details
+                    .filter(([, value]) => value !== null && value !== undefined && String(value).trim() !== '')
+                    .map(([label, value]) => `
+                        <span class="inline-flex items-baseline gap-1 rounded bg-white/70 dark:bg-slate-900/60 px-1.5 py-1 text-[10px] leading-tight break-words">
+                            <span class="text-slate-500 dark:text-slate-400">${label}:</span>
+                            <span class="font-medium text-slate-800 dark:text-slate-200">${escapeHtml(value)}</span>
+                        </span>`).join('');
 
                 rows += `
                     <tr class="border-b dark:border-slate-800/50 hover:bg-emerald-50/40 dark:hover:bg-emerald-950/10 transition">
-                        <td class="p-3 text-xs font-bold">
-                            ${escapeHtml(c.model || '-')}<br>
-                            <span class="text-emerald-600 font-mono">${escapeHtml(c.plate || '-')}</span>
+                        <td class="p-3 align-top">
+                            <div class="mb-2 text-xs font-bold">
+                                ${escapeHtml(c.model || '-')}<br>
+                                <span class="text-emerald-600 font-mono">${escapeHtml(c.plate || '-')}</span>
+                            </div>
+                            ${detailsHtml ? `<div class="flex flex-wrap gap-1 min-w-[220px] max-w-2xl">${detailsHtml}</div>` : ''}
                         </td>
-                        <td class="p-3 text-center text-xs text-amber-700 dark:text-amber-300 font-semibold">${escapeHtml(notesText)}</td>
                         <td class="p-3 text-center text-xs text-gray-500">${inDateStr}</td>
                         <td class="p-3 text-center text-xs text-emerald-700 dark:text-emerald-300 font-bold">${deliveredDateStr}</td>
                         <td class="p-3 text-center">
