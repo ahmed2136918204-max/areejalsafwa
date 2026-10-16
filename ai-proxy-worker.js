@@ -82,6 +82,9 @@ export default {
       return json({ error: 'not-found' }, 404, cors);
     } catch (err) {
       console.error('AI Worker upstream failure:', err instanceof Error ? err.message : 'Unknown error');
+      if (err && err.status === 503) {
+        return json({ error: 'upstream-unavailable' }, 503, cors);
+      }
       return json({ error: 'upstream-error' }, 502, cors);
     }
   },
@@ -115,9 +118,10 @@ function sanitizeHistory(history) {
 
 async function callGemini(env, systemPrompt, contents, maxOutputTokens) {
   const model = env.GEMINI_MODEL || DEFAULT_MODEL;
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
-    {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
       body: JSON.stringify({
@@ -125,15 +129,25 @@ async function callGemini(env, systemPrompt, contents, maxOutputTokens) {
         contents,
         generationConfig: { maxOutputTokens, temperature: 0.6 },
       }),
+    });
+
+    if (!res.ok) {
+      const errorDetails = (await res.text()).slice(0, 1000);
+      if ((res.status === 429 || res.status === 503) && attempt < 2) {
+        await new Promise((resolve) => setTimeout(resolve, 500 * (attempt + 1)));
+        continue;
+      }
+      const error = new Error(`Gemini API error (${res.status}): ${errorDetails}`);
+      error.status = res.status === 429 || res.status === 503 ? 503 : 502;
+      throw error;
     }
-  );
-  if (!res.ok) {
-    const errorDetails = (await res.text()).slice(0, 1000);
-    throw new Error(`Gemini API error (${res.status}): ${errorDetails}`);
+
+    const data = await res.json();
+    const parts = (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) || [];
+    const reply = parts.map((p) => p.text || '').join('').trim();
+    if (!reply) throw new Error('Gemini API returned an empty reply');
+    return reply;
   }
-  const data = await res.json();
-  const parts = (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) || [];
-  return parts.map((p) => p.text || '').join('').trim();
 }
 
 async function isApprovedStaff(authHeader) {
