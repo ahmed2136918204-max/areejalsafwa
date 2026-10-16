@@ -1,0 +1,104 @@
+// ============================================================================
+// firestore.rules — المرحلة الثانية
+// ⚠️ لا تنشر هذا الملف قبل: (1) رفع index.html الجديد، (2) دخول الأدمن مرة واحدة
+//    لمزامنة public_status، (3) نجاح البحث برقم اللوحة. الفرق عن النسخة السابقة:
+//    - قراءة cars أصبحت للموظفين المعتمدين فقط (كانت مفتوحة للجميع مؤقتاً)
+//    - إنشاء مستند المستخدم يتحقق من الـ uid والإيميل (يمنع حقن بيانات في قائمة الموظفين)
+// ============================================================================
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function profile() {
+      return get(/databases/$(database)/documents/artifacts/areej-alsafwa-app/public/data/users/$(request.auth.uid)).data;
+    }
+    function isApproved() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/artifacts/areej-alsafwa-app/public/data/users/$(request.auth.uid))
+        && profile().approved == true;
+    }
+    function isAdmin() {
+      return isApproved() && profile().role == 'admin';
+    }
+
+    match /artifacts/areej-alsafwa-app/public/data {
+
+      // ---------- الموظفون ----------
+      match /users/{uid} {
+        allow create: if request.auth != null
+          && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly(['uid', 'email', 'approved', 'role', 'createdAt'])
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.email == request.auth.token.email
+          && request.resource.data.approved == false
+          && request.resource.data.role == 'employee';
+        allow get: if request.auth != null && (request.auth.uid == uid || isAdmin());
+        allow list: if isAdmin();
+        allow update, delete: if isAdmin();
+      }
+
+      // ---------- عام (بدون تسجيل دخول) ----------
+      match /plate_search_logs/{logId} {
+        allow create: if request.resource.data.keys().hasOnly(['plate', 'found', 'timestamp'])
+          && request.resource.data.plate is string
+          && request.resource.data.plate.size() <= 30
+          && request.resource.data.found is bool
+          && request.resource.data.timestamp is string;
+        allow read, update, delete: if isApproved();
+      }
+
+      match /site_stats/summary {
+        function incOk(f) {
+          return request.resource.data.get(f, 0) >= resource.data.get(f, 0)
+              && request.resource.data.get(f, 0) <= resource.data.get(f, 0) + 1;
+        }
+        allow read: if isApproved();
+        allow create: if request.resource.data.keys().hasOnly(['visitors', 'plateSearches'])
+          && request.resource.data.get('visitors', 0) <= 1
+          && request.resource.data.get('plateSearches', 0) <= 1;
+        allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['visitors', 'plateSearches'])
+          && incOk('visitors') && incOk('plateSearches');
+      }
+
+      match /customer_requests/{requestId} {
+        allow create: if request.resource.data.keys().hasOnly(
+            ['type', 'customer_name', 'phone_number', 'car_type', 'plate_number', 'details', 'status', 'created_at'])
+          && request.resource.data.type in ['booking', 'complaint']
+          && request.resource.data.status == 'new'
+          && request.resource.data.customer_name is string
+          && request.resource.data.customer_name.size() > 0 && request.resource.data.customer_name.size() <= 100
+          && request.resource.data.phone_number is string
+          && request.resource.data.phone_number.matches('^\\+?[0-9]{9,15}$')
+          && request.resource.data.car_type.size() <= 100
+          && request.resource.data.plate_number.size() <= 30
+          && request.resource.data.details.size() <= 1500;
+        allow read, update, delete: if isApproved();
+      }
+
+      // الحالة العامة للسيارة: قراءة مستند واحد فقط (get) ولا يمكن سرد المجموعة
+      match /public_status/{plateKey} {
+        allow get: if true;
+        allow list: if false;
+        allow write: if isApproved();
+      }
+
+      // ---------- السيارات (للموظفين المعتمدين فقط) ----------
+      match /cars/{id} {
+        allow read, write: if isApproved();
+      }
+
+      // ---------- باقي المجموعات (للموظفين المعتمدين فقط) ----------
+      match /{coll}/{docId=**} {
+        allow read, write: if isApproved() && coll in [
+          'delivered_cars', 'history', 'work_assignments',
+          'workers_directory', 'parts_representatives', 'car_parts_followups'
+        ];
+      }
+
+      match /activity_logs/{logId} {
+        allow create, read: if isApproved();
+        allow update, delete: if isAdmin();
+      }
+    }
+  }
+}
