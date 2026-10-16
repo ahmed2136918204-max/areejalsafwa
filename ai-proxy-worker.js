@@ -3,9 +3,8 @@
 // ============================================================================
 
 const ALLOWED_ORIGINS = [
-  'https://www.areejalsafwa.com', 
   'https://areejalsafwa.com',
-  'https://your-project.vercel.app' // <--- استبدل هذا الرابط برابط موقعك الفعلي على Vercel
+  'https://www.areejalsafwa.com'
 ];
 const FIREBASE_PROJECT_ID = 'areej-alsafwa';
 const APP_ID = 'areej-alsafwa-app';

@@ -2693,9 +2693,8 @@
 
         // ==========================================
         // 🤖 رابط وسيط الذكاء الاصطناعي (Cloudflare Worker) — لا تضع مفتاح Gemini في هذا الملف أبداً.
-        // بعد نشر ملف ai-proxy-worker.js ضع رابطه هنا، مثال: "https://areej-ai.YOURNAME.workers.dev"
-        // لو تُرك فارغاً: يظهر للعميل "الخدمة غير مفعلة" ويكمل باقي الموقع عمله عادي.
-        const AI_PROXY_URL = "";
+        // تمر جميع طلبات الدردشة والصياغة عبر عامل Cloudflare.
+        const AI_PROXY_URL = "https://areejalsafwa.ahmed2136918204.workers.dev";
         // ==========================================
 
         window.activeTab = 'ready'; 
@@ -5963,15 +5962,26 @@
         async function callAiProxy(path, body, authToken) {
             if (!AI_PROXY_URL) return null;
             const headers = { 'Content-Type': 'application/json' };
-            if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+            if (authToken) headers['Authorization'] = 'Bearer ' + authToken;
             const res = await fetch(`${AI_PROXY_URL.replace(/\/+$/, '')}${path}`, {
                 method: 'POST',
                 headers,
                 body: JSON.stringify(body)
             });
-            if (!res.ok) throw new Error('AI proxy error ' + res.status);
-            const data = await res.json();
-            return (data && typeof data.reply === 'string') ? data.reply : '';
+            let data;
+            try {
+                data = await res.json();
+            } catch (error) {
+                throw new Error(`AI Worker returned an invalid response (HTTP ${res.status})`);
+            }
+            if (!res.ok) {
+                const detail = data && typeof data.error === 'string' ? `: ${data.error}` : '';
+                throw new Error(`AI Worker error (HTTP ${res.status})${detail}`);
+            }
+            if (!data || typeof data.reply !== 'string') {
+                throw new Error('AI Worker response is missing a reply');
+            }
+            return data.reply;
         }
 
         window.handleAiSubmit = async (e) => {
@@ -6011,14 +6021,9 @@
 
         // صياغة رسائل الواتساب للموظفين (تتطلب حساباً معتمداً؛ الوسيط يتحقق من ذلك)
         window.callMirgoAPI = async (currentMessage, instructions) => {
-            try {
-                const token = auth && auth.currentUser ? await auth.currentUser.getIdToken() : null;
-                if (!token) return '';
-                return (await callAiProxy('/enhance', { currentMessage, instructions }, token)) || '';
-            } catch (error) {
-                console.error(error);
-                return '';
-            }
+            const token = auth && auth.currentUser ? await auth.currentUser.getIdToken() : null;
+            if (!token) throw new Error('Employee authentication is required to enhance messages');
+            return callAiProxy('/enhance', { currentMessage, instructions }, token);
         };
 
         window.enhanceMessageNatural = async () => {
@@ -6029,15 +6034,17 @@
             const loader = document.getElementById('aiLoader');
             if (loader) loader.classList.remove('hidden');
 
-            const res = await window.callMirgoAPI(generateMessage(), ins);
-            if (res) {
+            try {
+                const res = await window.callMirgoAPI(generateMessage(), ins);
                 document.getElementById('msgTemplate').value = res.trim();
                 onTemplateChange();
                 showToast('تمت الصياغة بذكاء!', 'success');
-            } else {
+            } catch (error) {
+                console.error(error);
                 showToast('تعذر الاتصال بخدمة الذكاء الاصطناعي حالياً.', 'error');
+            } finally {
+                if (loader) loader.classList.add('hidden');
             }
-            if (loader) loader.classList.add('hidden');
         };
 
         window.triggerClearHistoryModal = () => showCustomConfirm('مسح السجل', 'تأكيد الحذف الكامل؟', async () => { 
