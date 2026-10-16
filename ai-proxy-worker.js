@@ -8,7 +8,7 @@ const ALLOWED_ORIGINS = [
 ];
 const FIREBASE_PROJECT_ID = 'areej-alsafwa';
 const APP_ID = 'areej-alsafwa-app';
-const DEFAULT_MODEL = 'gemini-2.5-flash';
+const DEFAULT_MODEL = 'gemini-3.8-flash';
 
 const CHAT_SYSTEM_PROMPT = `أنت المساعدة الذكية التفاعلية الرسمية لشركة "أريج الصفوة لخدمات السيارات" في المملكة العربية السعودية واسمك "أريج".
 فروعنا المتاحة وتغطيتنا:
