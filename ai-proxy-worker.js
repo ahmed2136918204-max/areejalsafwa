@@ -81,6 +81,7 @@ export default {
 
       return json({ error: 'not-found' }, 404, cors);
     } catch (err) {
+      console.error('AI Worker upstream failure:', err instanceof Error ? err.message : 'Unknown error');
       return json({ error: 'upstream-error' }, 502, cors);
     }
   },
@@ -126,7 +127,10 @@ async function callGemini(env, systemPrompt, contents, maxOutputTokens) {
       }),
     }
   );
-  if (!res.ok) throw new Error('gemini ' + res.status);
+  if (!res.ok) {
+    const errorDetails = (await res.text()).slice(0, 1000);
+    throw new Error(`Gemini API error (${res.status}): ${errorDetails}`);
+  }
   const data = await res.json();
   const parts = (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) || [];
   return parts.map((p) => p.text || '').join('').trim();
