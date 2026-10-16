@@ -114,7 +114,7 @@ function sanitizeHistory(history) {
 
 async function callGemini(env, systemPrompt, contents, maxOutputTokens) {
   const model = env.GEMINI_MODEL || DEFAULT_MODEL;
-  const res =- await fetch(
+  const res = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
     {
       method: 'POST',
