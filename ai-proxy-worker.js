@@ -1,19 +1,12 @@
 // ============================================================================
 // ai-proxy-worker.js — وسيط آمن بين موقع أريج الصفوة و Gemini (Cloudflare Worker)
-//
-// لماذا؟ لأن أي مفتاح يوضع داخل index.html يظهر لكل زائر (عرض المصدر) ويمكن سرقته.
-// هنا المفتاح يُحفظ كـ Secret على Cloudflare ولا يظهر أبداً في الموقع.
-//
-// المسارات:
-//   POST /chat     (عام)    مساعد "أريج" للعملاء — بدون أي بيانات عملاء
-//   POST /enhance  (موظفون) صياغة رسائل الواتساب — يتحقق من أن الموظف معتمد في Firestore
-//
-// الإعدادات المطلوبة في Cloudflare (Settings > Variables and Secrets):
-//   GEMINI_API_KEY  (Secret)   مفتاح Gemini من Google AI Studio
-//   GEMINI_MODEL    (اختياري)  اسم النموذج، الافتراضي: gemini-2.5-flash — تأكد منه في AI Studio
 // ============================================================================
 
-const ALLOWED_ORIGINS = ['https://www.areejalsafwa.com', 'https://areejalsafwa.com'];
+const ALLOWED_ORIGINS = [
+  'https://www.areejalsafwa.com', 
+  'https://areejalsafwa.com',
+  'https://your-project.vercel.app' // <--- استبدل هذا الرابط برابط موقعك الفعلي على Vercel
+];
 const FIREBASE_PROJECT_ID = 'areej-alsafwa';
 const APP_ID = 'areej-alsafwa-app';
 const DEFAULT_MODEL = 'gemini-2.5-flash';
@@ -61,7 +54,6 @@ export default {
 
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
     if (request.method !== 'POST') return json({ error: 'method-not-allowed' }, 405, cors);
-    // ملاحظة: فحص Origin يوقف المتصفحات الأخرى فقط، أما الأدوات الآلية فتحتاج Rate Limiting (انظر الشرح)
     if (!originAllowed) return json({ error: 'forbidden' }, 403, cors);
     if (!env.GEMINI_API_KEY) return json({ error: 'not-configured' }, 500, cors);
 
@@ -95,8 +87,6 @@ export default {
   },
 };
 
-// ---------- مساعدات ----------
-
 function json(data, status, headers) {
   return new Response(JSON.stringify(data), {
     status,
@@ -109,7 +99,6 @@ function cleanText(value, max) {
   return value.trim().slice(0, max);
 }
 
-// يتحقق من شكل المحادثة ويقصّ أطوالها: آخر 8 رسائل كحد أقصى، أدوار user/model فقط
 function sanitizeHistory(history) {
   if (!Array.isArray(history) || history.length === 0) return null;
   const items = history.slice(-8).map((m) => {
@@ -126,7 +115,7 @@ function sanitizeHistory(history) {
 
 async function callGemini(env, systemPrompt, contents, maxOutputTokens) {
   const model = env.GEMINI_MODEL || DEFAULT_MODEL;
-  const res = await fetch(
+  const res =- await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
     {
       method: 'POST',
@@ -144,8 +133,6 @@ async function callGemini(env, systemPrompt, contents, maxOutputTokens) {
   return parts.map((p) => p.text || '').join('').trim();
 }
 
-// يتأكد أن صاحب التوكن موظف معتمد: يقرأ مستنده من Firestore "بصلاحياته هو".
-// لو التوكن مزوّر أو منتهٍ، Firestore نفسه يرفض الطلب. ولو الحساب غير معتمد، تمنعه القواعد/الشرط.
 async function isApprovedStaff(authHeader) {
   const m = /^Bearer\s+(.+)$/i.exec(authHeader || '');
   if (!m) return false;
