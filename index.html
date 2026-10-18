@@ -2746,12 +2746,40 @@
                 return showToast('رقم اللوحة غير متوفر للنسخ والبحث.', 'error');
             }
 
+            const gmailSearchUrl = `https://mail.google.com/mail/u/0/#search/${encodeURIComponent(value)}`;
+            const userAgent = navigator.userAgent || '';
+            const isAndroid = /Android/i.test(userAgent);
+            const isIOS = /iPhone|iPad|iPod/i.test(userAgent)
+                || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+            let copyPromise;
             try {
-                await navigator.clipboard.writeText(value);
-                showToast(`تم نسخ رقم اللوحة (${value}) بنجاح.`);
+                copyPromise = navigator.clipboard.writeText(value);
             } catch (error) {
                 console.error('Failed to copy car plate:', error);
                 showToast('تعذر نسخ رقم اللوحة. تحقق من أذونات الحافظة في المتصفح.', 'error');
+            }
+
+            if (isAndroid || isIOS) {
+                event.preventDefault();
+                if (isAndroid) {
+                    const fallbackUrl = encodeURIComponent(gmailSearchUrl);
+                    window.location.href = `intent://mail.google.com/mail/u/0/#search/${encodeURIComponent(value)}#Intent;scheme=https;package=com.google.android.gm;S.browser_fallback_url=${fallbackUrl};end`;
+                } else {
+                    window.location.href = gmailSearchUrl;
+                }
+            }
+
+            if (copyPromise) {
+                try {
+                    await copyPromise;
+                    showToast(`تم نسخ رقم اللوحة (${value}) بنجاح.`);
+                } catch (error) {
+                    console.error('Failed to copy car plate:', error);
+                    showToast('تعذر نسخ رقم اللوحة. تحقق من أذونات الحافظة في المتصفح.', 'error');
+                }
+            } else {
+                return;
             }
         };
 
