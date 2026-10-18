@@ -2,7 +2,20 @@
 <html lang="ar" dir="rtl" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script>
+        if (window.matchMedia('(max-width: 767px) and (pointer: coarse)').matches) {
+            document.addEventListener('touchmove', (event) => {
+                if (event.touches.length > 1) {
+                    event.preventDefault();
+                }
+            }, { passive: false });
+
+            ['gesturestart', 'gesturechange', 'gestureend'].forEach((eventName) => {
+                document.addEventListener(eventName, (event) => event.preventDefault(), { passive: false });
+            });
+        }
+    </script>
     <title>شركة أريج الصفوة لخدمات السيارات</title>
     <meta name="description" content="شركة أريج الصفوة لخدمات السيارات في الرياض وأبها، نقدم خدمات صيانة شاملة، قطع أصلية، سرعة ودقة، وفريق محترف لضمان أفضل تجربة لعملائنا.">
     <meta name="keywords" content="صيانة السيارات, الرياض, أبها, قطع أصلية, خدمة سريعة, فريق محترف">
