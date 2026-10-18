@@ -2739,47 +2739,18 @@
         // [أمان] يحوّل أي قيمة إلى وسيط JavaScript آمن داخل onclick="..." (JSON + تعقيم HTML)
         const jsArg = (value) => escapeHtml(JSON.stringify(String(value ?? '')));
 
-        window.copyCarPlateAndSearchGmail = async (event, plate) => {
+        window.copyCarPlateToClipboard = async (plate) => {
             const value = String(plate || '').trim();
             if (!value) {
-                event.preventDefault();
-                return showToast('رقم اللوحة غير متوفر للنسخ والبحث.', 'error');
+                return showToast('رقم اللوحة غير متوفر للنسخ.', 'error');
             }
 
-            const gmailSearchUrl = `https://mail.google.com/mail/u/0/#search/${encodeURIComponent(value)}`;
-            const userAgent = navigator.userAgent || '';
-            const isAndroid = /Android/i.test(userAgent);
-            const isIOS = /iPhone|iPad|iPod/i.test(userAgent)
-                || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
-            let copyPromise;
             try {
-                copyPromise = navigator.clipboard.writeText(value);
+                await navigator.clipboard.writeText(value);
+                showToast(`تم نسخ رقم اللوحة (${value}) بنجاح.`);
             } catch (error) {
                 console.error('Failed to copy car plate:', error);
                 showToast('تعذر نسخ رقم اللوحة. تحقق من أذونات الحافظة في المتصفح.', 'error');
-            }
-
-            if (isAndroid || isIOS) {
-                event.preventDefault();
-                if (isAndroid) {
-                    const fallbackUrl = encodeURIComponent(gmailSearchUrl);
-                    window.location.href = `intent://mail.google.com/mail/u/0/#search/${encodeURIComponent(value)}#Intent;scheme=https;package=com.google.android.gm;S.browser_fallback_url=${fallbackUrl};end`;
-                } else {
-                    window.location.href = gmailSearchUrl;
-                }
-            }
-
-            if (copyPromise) {
-                try {
-                    await copyPromise;
-                    showToast(`تم نسخ رقم اللوحة (${value}) بنجاح.`);
-                } catch (error) {
-                    console.error('Failed to copy car plate:', error);
-                    showToast('تعذر نسخ رقم اللوحة. تحقق من أذونات الحافظة في المتصفح.', 'error');
-                }
-            } else {
-                return;
             }
         };
 
@@ -4764,7 +4735,7 @@
                         <td class="p-3 text-xs font-bold">
                             ${escapeHtml(c.model)}<br>
                             ${c.plate
-                                ? `<a href="https://mail.google.com/mail/u/0/#search/${encodeURIComponent(c.plate)}" target="_blank" rel="noopener noreferrer" onclick="window.copyCarPlateAndSearchGmail(event, ${jsArg(c.plate)})" class="text-emerald-500 font-mono hover:underline cursor-pointer" title="نسخ اللوحة وفتح بحث Gmail">${escapeHtml(c.plate)}</a>`
+                                ? `<button type="button" onclick="window.copyCarPlateToClipboard(${jsArg(c.plate)})" class="text-emerald-500 font-mono hover:underline cursor-pointer" title="نسخ رقم اللوحة">${escapeHtml(c.plate)}</button>`
                                 : `<span class="text-emerald-500 font-mono">${escapeHtml(c.plate)}</span>`}
                             ${customerHtml.join('')}
                             ${vehicleDetailsHtml}
