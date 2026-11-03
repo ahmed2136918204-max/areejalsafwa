@@ -556,7 +556,7 @@
                     </div>
                     <form id="bookingForm" onsubmit="window.handleBookingSubmit(event)" class="space-y-6">
                         <input type="hidden" id="bookRequestType" value="booking">
-                        <input type="text" id="bookWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
+                        <input type="text" id="bookWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:0;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;opacity:0;">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div><label class="block text-slate-300 font-bold mb-2 text-sm">اسم العميل بالكامل *</label><input type="text" id="bookName" required maxlength="100" autocomplete="name" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-secondary outline-none"></div>
                             <div><label class="block text-slate-300 font-bold mb-2 text-sm">رقم الجوال *</label><input type="tel" id="bookPhone" required maxlength="20" inputmode="tel" autocomplete="tel" placeholder="05xxxxxxxx" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-secondary outline-none" dir="ltr"></div>
