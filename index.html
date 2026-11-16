@@ -1458,14 +1458,15 @@
                             <input type="hidden" id="trackerCarPlate">
                         </div>
                         <div><label class="block text-xs font-medium mb-1">الموقع الحالي</label><select id="trackerLocation" class="w-full border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-2 rounded text-sm outline-none text-dark dark:text-white"><option value="center" selected>🏢 بالمركز</option><option value="customer">🚗 مع العميل</option></select></div>
-                        <div><label class="block text-xs font-medium mb-1">حالة التعميد</label><select id="trackerApproval" class="w-full border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-2 rounded text-sm outline-none text-dark dark:text-white"><option value="pending" selected>⏳ بانتظار التعميد</option><option value="approved">✅ معمد</option><option value="none">❌ لم يتم</option></select></div>
+                        <div><label class="block text-xs font-medium mb-1">حالة التعميد العامة</label><select id="trackerApproval" class="w-full border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-2 rounded text-sm outline-none text-dark dark:text-white"><option value="pending" selected>⏳ بانتظار التعميد</option><option value="approved">✅ معمد</option><option value="none">❌ لم يتم</option></select></div>
                         <div><label class="block text-xs font-medium mb-1">حالة الإصلاح</label><select id="trackerRepairStatus" class="w-full border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-2 rounded text-sm outline-none text-dark dark:text-white"><option value="waiting" selected>⏳ بانتظار الإصلاح</option><option value="waiting_for_parts">🧩 انتظار القطع</option><option value="repairing">🔧 تحت الإصلاح</option><option value="ready">✨ جاهزة</option></select></div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
                         <div><label class="block text-xs font-medium mb-1">اسم العميل <span class="text-gray-400 font-normal">(اختياري)</span></label><input type="text" id="trackerCustomerName" placeholder="مثال: عبدالله محمد" class="w-full border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-2 rounded text-sm outline-none text-dark dark:text-white"></div>
                         <div><label class="block text-xs font-medium mb-1">رقم الجوال <span class="text-gray-400 font-normal">(اختياري)</span></label><input type="tel" id="trackerCustomerPhone" placeholder="05xxxxxxxx" class="w-full border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-2 rounded text-sm outline-none text-dark dark:text-white font-mono" dir="ltr"></div>
                     </div>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
+                    <div class="text-xs font-bold text-slate-600 dark:text-slate-300 mt-3">بيانات الحادث الأول (اختياري)</div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-1">
                         <div><label class="block text-[11px] font-medium mb-1">لون السيارة <span class="text-gray-400 font-normal">(اختياري)</span></label><input type="text" id="trackerCarColor" placeholder="مثال: أبيض" class="w-full border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-1.5 rounded text-xs outline-none text-dark dark:text-white"></div>
                         <div><label class="block text-[11px] font-medium mb-1 text-green-800 dark:text-green-400">مبلغ التعميد <span class="text-gray-400 font-normal">(اختياري)</span></label><input type="number" id="trackerApprovalAmount" min="0" step="0.01" placeholder="0.00" class="w-full border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-1.5 rounded text-xs outline-none text-dark dark:text-white"></div>
                         <div><label class="block text-[11px] font-medium mb-1 text-red-800 dark:text-red-400">مبلغ التحمل <span class="text-gray-400 font-normal">(اختياري)</span></label><input type="number" id="trackerDeductibleAmount" min="0" step="0.01" placeholder="0.00" class="w-full border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-1.5 rounded text-xs outline-none text-dark dark:text-white"></div>
@@ -1503,7 +1504,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 bg-white dark:bg-slate-900 p-3 rounded-xl border dark:border-slate-800 w-full">
                             <div>
                                 <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 mb-1">البحث النصي</label>
-                                <input type="text" id="carSearchInput" oninput="window.debounceCarsTrackerRender()" placeholder="السيارة، اللوحة، جوال العميل، رقم المطالبة..." class="w-full bg-gray-50 dark:bg-slate-800 border dark:border-slate-700 text-xs px-2 py-1.5 rounded-lg text-dark dark:text-white outline-none focus:ring-1 focus:ring-safwa-gold">
+                                <input type="text" id="carSearchInput" oninput="window.debounceCarsTrackerRender()" placeholder="السيارة، اللوحة، اسم العميل، الجوال، رقم المطالبة..." aria-label="البحث بالسيارة أو اللوحة أو اسم العميل أو الجوال أو رقم المطالبة" class="w-full bg-gray-50 dark:bg-slate-800 border dark:border-slate-700 text-xs px-2 py-1.5 rounded-lg text-dark dark:text-white outline-none focus:ring-1 focus:ring-safwa-gold">
                             </div>
                             <div>
                                 <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 mb-1">موقع السيارة</label>
@@ -1540,7 +1541,7 @@
                                 <tr>
                                     <th class="p-3">السيارة واللوحة والملاحظات</th>
                                     <th class="p-3 text-center">موقع السيارة</th>
-                                    <th class="p-3 text-center">حالة التعميد</th>
+                                    <th class="p-3 text-center">حالة التعميد العامة</th>
                                     <th class="p-3 text-center">حالة الإصلاح</th>
                                     <th class="p-3 text-center">تاريخ الدخول</th>
                                     <th class="p-3 text-center">إجراءات</th>
@@ -1780,28 +1781,10 @@
                         <input type="tel" id="editCarCustomerPhone" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-sm rounded-lg p-2.5 outline-none dark:text-white font-mono" dir="ltr">
                     </div>
                 </div>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     <div>
                         <label class="block text-[11px] font-bold text-gray-600 dark:text-slate-400 mb-1">لون السيارة</label>
                         <input type="text" id="editCarColor" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-xs rounded-lg p-1.5 outline-none dark:text-white">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-green-800 dark:text-green-400 mb-1">مبلغ التعميد</label>
-                        <input type="number" id="editCarApprovalAmount" min="0" step="0.01" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-xs rounded-lg p-1.5 outline-none dark:text-white">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-red-800 dark:text-red-400 mb-1">مبلغ التحمل</label>
-                        <input type="number" id="editCarDeductibleAmount" min="0" step="0.01" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-xs rounded-lg p-1.5 outline-none dark:text-white">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-gray-600 dark:text-slate-400 mb-1">مدة الإصلاح (أيام)</label>
-                        <input type="number" id="editCarRepairDurationDays" min="0" step="1" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-xs rounded-lg p-1.5 outline-none dark:text-white">
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div class="min-w-0">
-                        <label class="block text-[11px] font-bold text-gray-600 dark:text-slate-400 mb-1">رقم المطالبة <span class="font-normal text-gray-400">(اختياري)</span></label>
-                        <input type="text" id="editCarClaimNumber" class="w-full min-w-0 bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-xs rounded-lg p-1.5 outline-none dark:text-white">
                     </div>
                     <div class="min-w-0">
                         <label class="block text-[11px] font-bold text-gray-600 dark:text-slate-400 mb-1">ملاحظات السيارة <span class="font-normal text-gray-400">(اختياري)</span></label>
@@ -1817,12 +1800,13 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-600 dark:text-slate-400 mb-1">حالة التعميد</label>
+                        <label class="block text-xs font-bold text-gray-600 dark:text-slate-400 mb-1">حالة التعميد العامة</label>
                         <select id="editCarApproval" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-sm rounded-lg p-2 dark:text-white outline-none">
                             <option value="pending">⏳ بانتظار التعميد</option>
                             <option value="approved">✅ معمد</option>
                             <option value="none">❌ لم يتم</option>
                         </select>
+                        <span id="editCarApprovalHint" class="hidden mt-1 text-[10px] text-amber-700 dark:text-amber-400">تُدار حالة التعميد من حالات الحوادث المسجلة.</span>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-600 dark:text-slate-400 mb-1">حالة الإصلاح</label>
@@ -1839,6 +1823,59 @@
             <div class="flex justify-end gap-3 mt-6">
                 <button onclick="window.closeEditCarModal()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-xs font-bold rounded-xl transition">إلغاء</button>
                 <button onclick="window.saveEditedCar()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition shadow-md shadow-emerald-600/20">حفظ التعديلات</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="carAccidentsModal" class="fixed inset-0 z-[119] bg-black/70 backdrop-blur-sm hidden flex items-center justify-center overflow-y-auto overscroll-contain p-4">
+        <div class="bg-white dark:bg-slate-900 border border-amber-400/40 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[calc(100vh-2rem)] overflow-y-auto p-5 font-tajawal text-right">
+            <div class="flex justify-between items-center border-b border-gray-150 dark:border-slate-800 pb-3 mb-4">
+                <div>
+                    <h3 class="font-bold text-gray-800 dark:text-white flex items-center gap-2"><i class="fa-solid fa-car-burst text-amber-500"></i> حوادث السيارة</h3>
+                    <p id="carAccidentsModalVehicle" class="text-xs text-slate-500 mt-1"></p>
+                </div>
+                <button type="button" onclick="window.closeCarAccidentsModal()" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-times text-xl"></i></button>
+            </div>
+
+            <div id="carAccidentsList" class="space-y-2 mb-5"></div>
+            <input type="hidden" id="accidentCarId">
+            <input type="hidden" id="accidentId">
+            <h4 id="accidentFormTitle" class="font-bold text-sm mb-3 text-slate-700 dark:text-slate-200">إضافة حادث</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold mb-1 text-slate-600 dark:text-slate-400">تاريخ الحادث</label>
+                    <input type="date" id="accidentDate" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-sm rounded-lg p-2 outline-none dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold mb-1 text-slate-600 dark:text-slate-400">رقم المطالبة</label>
+                    <input type="text" id="accidentClaimNumber" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-sm rounded-lg p-2 outline-none dark:text-white" placeholder="اختياري">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold mb-1 text-slate-600 dark:text-slate-400">حالة التعميد</label>
+                    <select id="accidentApproval" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-sm rounded-lg p-2 outline-none dark:text-white">
+                        <option value="pending">⏳ بانتظار التعميد</option><option value="approved">✅ معمد</option><option value="none">❌ لم يتم</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold mb-1 text-green-700 dark:text-green-400">مبلغ التعميد</label>
+                    <input type="number" id="accidentApprovalAmount" min="0" step="0.01" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-sm rounded-lg p-2 outline-none dark:text-white" placeholder="اختياري">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold mb-1 text-red-700 dark:text-red-400">مبلغ التحمل</label>
+                    <input type="number" id="accidentDeductibleAmount" min="0" step="0.01" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-sm rounded-lg p-2 outline-none dark:text-white" placeholder="اختياري">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold mb-1 text-slate-600 dark:text-slate-400">مدة الإصلاح (أيام)</label>
+                    <input type="number" id="accidentRepairDurationDays" min="0" step="1" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-sm rounded-lg p-2 outline-none dark:text-white" placeholder="اختياري">
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-bold mb-1 text-slate-600 dark:text-slate-400">ملاحظات الحادث</label>
+                    <textarea id="accidentNotes" rows="2" class="w-full bg-gray-50 border border-gray-300 dark:bg-slate-800 dark:border-slate-700 text-sm rounded-lg p-2 outline-none dark:text-white" placeholder="اختياري"></textarea>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-4">
+                <button type="button" onclick="window.resetAccidentForm()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-xs font-bold rounded-lg">تفريغ الحقول</button>
+                <button type="button" onclick="window.saveCarAccident()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-lg">حفظ الحادث</button>
             </div>
         </div>
     </div>
@@ -3395,10 +3432,18 @@
             }, (error) => console.error('Firestore Plate Search listener error:', error));
 
             unsubCars = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'cars'), (snap) => {
-                let list = []; snap.forEach(doc => {
-                    const data = doc.data();
-                    if (data && doc.id) {
-                        list.push({ id: doc.id, ...data });
+                let list = []; snap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data && docSnap.id) {
+                        const car = { id: docSnap.id, ...data };
+                        if (!Array.isArray(car.accidents)) {
+                            ensureCarAccidents(car);
+                            setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'cars', docSnap.id), car).catch((error) => {
+                                console.error('Failed to migrate legacy car accident data:', error);
+                                showToast(getCloudSyncErrorMessage(error, 'تعذر مزامنة ترحيل بيانات الحوادث لهذه السيارة.'), 'error');
+                            });
+                        }
+                        list.push(car);
                     }
                 });
                 list.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -3806,12 +3851,11 @@
             if (!matchedCar) return { matched: false, updated: false, car: null };
             if (!updatedCar) return { matched: true, updated: false, car: matchedCar };
 
+            if (!await syncCarToCloud(updatedCar, 'تعذر تحديث حالة السيارة في Firebase.')) {
+                return { matched: true, updated: false, car: matchedCar, error: 'cloud_sync_failed' };
+            }
             localStorage.setItem('safwa_cars_tracker', JSON.stringify(nextCars));
             window.renderCarsTracker();
-
-            if (isFirebaseActive) {
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'cars', updatedCar.id), updatedCar);
-            }
 
             return { matched: true, updated: true, car: updatedCar };
         };
@@ -4660,11 +4704,76 @@
             return car[key] || car.date || null;
         };
 
+        const ensureCarAccidents = (car) => {
+            if (Array.isArray(car.accidents)) return car.accidents;
+
+            const hasLegacyIncident = Boolean(
+                car.claimNumber ||
+                (car.deductibleAmount !== '' && car.deductibleAmount != null) ||
+                (car.approvalAmount !== '' && car.approvalAmount != null) ||
+                (car.repairDurationDays !== '' && car.repairDurationDays != null) ||
+                (car.approval && car.approval !== 'pending')
+            );
+            car.accidents = hasLegacyIncident ? [{
+                id: `accident_${car.id || Date.now()}`,
+                date: car.date || new Date().toISOString(),
+                claimNumber: car.claimNumber || '',
+                approval: car.approval || 'pending',
+                approvalAmount: car.approvalAmount ?? '',
+                deductibleAmount: car.deductibleAmount ?? '',
+                repairDurationDays: car.repairDurationDays ?? '',
+                notes: ''
+            }] : [];
+            return car.accidents;
+        };
+
+        const syncLegacyAccidentFields = (car) => {
+            const firstAccident = ensureCarAccidents(car)[0];
+            if (firstAccident) car.approval = firstAccident.approval || 'pending';
+            car.claimNumber = firstAccident?.claimNumber || '';
+            car.approvalAmount = firstAccident?.approvalAmount ?? '';
+            car.deductibleAmount = firstAccident?.deductibleAmount ?? '';
+            car.repairDurationDays = firstAccident?.repairDurationDays ?? '';
+        };
+
+        const accidentStatusLabel = (approval) => ({
+            pending: '⏳ بانتظار التعميد',
+            approved: '✅ معمد',
+            none: '❌ لم يتم'
+        }[approval] || 'غير محدد');
+
+        const getCarApprovalStatuses = (car) => {
+            const accidents = ensureCarAccidents(car);
+            return accidents.length
+                ? accidents.map((accident, index) => ({
+                    id: accident.id,
+                    label: accident.claimNumber ? `مطالبة ${accident.claimNumber}` : `حادث ${index + 1}`,
+                    approval: accident.approval || 'pending'
+                }))
+                : [{ id: null, label: '', approval: car.approval || 'pending' }];
+        };
+
+        const carHasApprovalStatus = (car, status) =>
+            getCarApprovalStatuses(car).some((item) => item.approval === status);
+
+        const getAccidentDateInputValue = (date) => {
+            const parsed = new Date(date || '');
+            return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString().slice(0, 10);
+        };
+
         window.renderCarsTracker = () => {
             let cars = [];
             try {
                 const raw = JSON.parse(localStorage.getItem('safwa_cars_tracker') || '[]');
                 cars = Array.isArray(raw) ? raw : [];
+                let migratedCars = false;
+                cars.forEach((car) => {
+                    if (!Array.isArray(car.accidents)) {
+                        ensureCarAccidents(car);
+                        migratedCars = true;
+                    }
+                });
+                if (migratedCars) localStorage.setItem('safwa_cars_tracker', JSON.stringify(cars));
             } catch (error) {
                 console.error('Failed to read cars tracker data:', error);
                 cars = [];
@@ -4673,8 +4782,8 @@
             const total = cars.length;
             const centerCount = cars.filter(c => c.location === 'center').length;
             const customerCount = cars.filter(c => c.location === 'customer').length;
-            const approvedCount = cars.filter(c => c.approval === 'approved').length;
-            const pendingAppCount = cars.filter(c => c.approval === 'pending').length;
+            const approvedCount = cars.filter(c => carHasApprovalStatus(c, 'approved')).length;
+            const pendingAppCount = cars.filter(c => carHasApprovalStatus(c, 'pending')).length;
             const repairingCount = cars.filter(c => c.repairStatus === 'repairing').length;
             const readyCount = cars.filter(c => c.repairStatus === 'ready').length;
 
@@ -4691,9 +4800,13 @@
             const term = searchInput ? searchInput.value.trim().toLowerCase() : '';
 
             const f = cars.filter(c => {
-                const matchesSearch = (c.model || '').toLowerCase().includes(term) || (c.plate || '').toLowerCase().includes(term) || (c.customerPhone || '').toString().toLowerCase().includes(term) || (c.notes || '').toLowerCase().includes(term) || (c.carColor || '').toLowerCase().includes(term) || (c.claimNumber || '').toString().toLowerCase().includes(term) || String(c.deductibleAmount ?? '').toLowerCase().includes(term) || String(c.approvalAmount ?? '').toLowerCase().includes(term) || String(c.repairDurationDays ?? '').toLowerCase().includes(term);
+                const accidentSearchText = ensureCarAccidents(c).map((accident) =>
+                    [accident.date, accident.claimNumber, accidentStatusLabel(accident.approval), accident.approval, accident.approvalAmount, accident.deductibleAmount, accident.repairDurationDays, accident.notes]
+                        .join(' ')
+                ).join(' ').toLowerCase();
+                const matchesSearch = (c.model || '').toLowerCase().includes(term) || (c.plate || '').toLowerCase().includes(term) || (c.customerName || '').toLowerCase().includes(term) || (c.customerPhone || '').toString().toLowerCase().includes(term) || (c.notes || '').toLowerCase().includes(term) || (c.carColor || '').toLowerCase().includes(term) || accidentSearchText.includes(term);
                 const matchesLoc = window.carFilters.location === 'all' || c.location === window.carFilters.location;
-                const matchesApp = window.carFilters.approval === 'all' || c.approval === window.carFilters.approval;
+                const matchesApp = window.carFilters.approval === 'all' || carHasApprovalStatus(c, window.carFilters.approval);
                 const matchesRep = window.carFilters.repair === 'all' || c.repairStatus === window.carFilters.repair;
                 return matchesSearch && matchesLoc && matchesApp && matchesRep;
             });
@@ -4725,7 +4838,7 @@
             const rowsHtml = [];
             f.forEach(c => {
                 const repText = getRepairLabel(c.repairStatus);
-                const appText = c.approval === 'approved' ? '✅ معمد' : c.approval === 'none' ? '❌ لم يتم' : '⏳ بانتظار التعميد';
+                const approvalStatuses = getCarApprovalStatuses(c);
                 const locationUpdatedAt = getStatusTimestampWithFallback(c, 'lastLocationUpdatedAt');
                 const approvalUpdatedAt = getStatusTimestampWithFallback(c, 'lastApprovalUpdatedAt');
                 const repairUpdatedAt = getStatusTimestampWithFallback(c, 'lastRepairStatusUpdatedAt');
@@ -4739,11 +4852,19 @@
                 if (c.customerPhone) customerHtml.push(`<button type="button" onclick="window.openMessagingFromCar(${jsArg(c.id)})" class="text-[10px] text-primary dark:text-blue-400 hover:text-secondary dark:hover:text-orange-300 hover:underline transition" dir="ltr" title="فتح المراسلات وتعبئة بيانات السيارة"><i class="fa-solid fa-phone text-[9px] ml-1"></i>${escapeHtml(c.customerPhone)}</button>`);
                 const vehicleDetails = [];
                 if (c.carColor) vehicleDetails.push(`اللون: ${escapeHtml(c.carColor)}`);
-                if (c.deductibleAmount !== '' && c.deductibleAmount != null) vehicleDetails.push(`مبلغ التحمل: ${escapeHtml(c.deductibleAmount)} ريال`);
-                if (c.approvalAmount !== '' && c.approvalAmount != null) vehicleDetails.push(`مبلغ التعميد: ${escapeHtml(c.approvalAmount)} ريال`);
-                if (c.repairDurationDays !== '' && c.repairDurationDays != null) vehicleDetails.push(`مدة الإصلاح: ${escapeHtml(c.repairDurationDays)} يوم`);
-                if (c.claimNumber) vehicleDetails.push(`رقم المطالبة: ${escapeHtml(c.claimNumber)}`);
                 const vehicleDetailsHtml = vehicleDetails.length ? `<div class="text-[10px] text-slate-600 dark:text-slate-300 mt-1">${vehicleDetails.join(' <span class="mx-1 text-slate-300">|</span> ')}</div>` : '';
+                const accidents = ensureCarAccidents(c);
+                const approvalStatusesHtml = approvalStatuses.map((status) => {
+                    const button = status.id
+                        ? `<button type="button" onclick="window.toggleCarAccidentApproval(${jsArg(c.id)}, ${jsArg(status.id)})" class="rounded-full bg-gray-100 dark:bg-slate-800 px-2.5 py-1 text-[10px] font-bold hover:ring-1 hover:ring-safwa-gold" title="تغيير حالة التعميد لهذه المطالبة">${escapeHtml(accidentStatusLabel(status.approval))}</button>`
+                        : `<span class="rounded-full bg-gray-100 dark:bg-slate-800 px-2.5 py-1 text-[10px] font-bold">${escapeHtml(accidentStatusLabel(status.approval))}</span>`;
+                    return `<div class="flex flex-wrap items-center justify-center gap-1">${status.label ? `<span class="text-[10px] text-slate-500 dark:text-slate-400">${escapeHtml(status.label)}:</span>` : ''}${button}</div>`;
+                }).join('');
+                const accidentsHtml = accidents.length
+                    ? `<div class="mt-2 flex flex-wrap gap-1">${accidents.map((accident) =>
+                        `<button type="button" onclick="window.openCarAccidentsModal(${jsArg(c.id)})" class="rounded-md border border-amber-200/70 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-950/15 px-2 py-1 text-[10px] font-bold text-amber-700 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-950/40" title="فتح إدارة الحوادث وعرض التفاصيل">${escapeHtml(accident.claimNumber || 'بدون رقم مطالبة')}</button>`
+                    ).join('')}</div>`
+                    : '<div class="mt-1 text-[10px] text-slate-400">لا توجد حوادث مسجلة</div>';
                 const notesHtml = c.notes ? `<br><span class="text-[10px] text-amber-700 dark:text-amber-400 font-semibold bg-amber-50 dark:bg-amber-950/30 border border-amber-200/40 px-2 py-0.5 rounded-md inline-block mt-1"><i class="fa-solid fa-sticky-note text-[9px] ml-1"></i> ${escapeHtml(c.notes)}</span>` : '';
 
                 rowsHtml.push(`
@@ -4755,6 +4876,7 @@
                                 : `<span class="text-emerald-500 font-mono">${escapeHtml(c.plate)}</span>`}
                             ${customerHtml.join('')}
                             ${vehicleDetailsHtml}
+                            ${accidentsHtml}
                             ${notesHtml}
                         </td>
                         <td class="p-3 text-center">
@@ -4762,7 +4884,7 @@
                             <div class="mt-1 text-[10px] text-slate-500 dark:text-slate-400">آخر تعديل: ${formatStatusUpdatedAt(locationUpdatedAt)}</div>
                         </td>
                         <td class="p-3 text-center">
-                            <button onclick="window.toggleCarApproval(${jsArg(c.id)})" class="text-[10px] bg-gray-100 dark:bg-slate-800 px-2.5 py-1 rounded-full font-bold">${appText}</button>
+                            <div class="flex flex-col items-center gap-1">${approvalStatusesHtml}</div>
                             <div class="mt-1 text-[10px] text-slate-500 dark:text-slate-400">آخر تعديل: ${formatStatusUpdatedAt(approvalUpdatedAt)}</div>
                         </td>
                         <td class="p-3 text-center">
@@ -4772,6 +4894,7 @@
                         <td class="p-3 text-center text-xs text-gray-500">${dateStr}</td>
                         <td class="p-3 text-center">
                             <div class="flex items-center justify-center gap-1.5">
+                                <button onclick="window.openCarAccidentsModal(${jsArg(c.id)})" class="text-amber-600 hover:text-amber-700 p-1.5 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-950/30 transition" title="إدارة الحوادث (${accidents.length})"><i class="fa-solid fa-car-burst text-sm"></i><span class="text-[9px] mr-1">${accidents.length}</span></button>
                                 <button onclick="window.openEditCarModal(${jsArg(c.id)})" class="text-blue-500 hover:text-blue-700 p-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-950/30 transition" title="تعديل بيانات السيارة"><i class="fa-solid fa-pen-to-square text-sm"></i></button>
                                 <button onclick="window.openCarWorkersModal(${jsArg(c.id)})" class="text-sky-600 hover:text-sky-700 p-1.5 rounded-lg hover:bg-sky-50 dark:hover:bg-sky-950/30 transition" title="توزيع العمال"><i class="fa-solid fa-users-gear text-sm"></i></button>
                                 <button onclick="window.openCarPartsFollowupModal(${jsArg(c.id)})" class="text-amber-600 hover:text-amber-700 p-1.5 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-950/30 transition" title="متابعة قطع الغيار"><i class="fa-solid fa-gears text-sm"></i></button>
@@ -5399,6 +5522,21 @@
             window.renderCarsTracker();
         };
 
+        const syncCarToCloud = async (car, fallbackMessage) => {
+            if (!isFirebaseActive || !db) {
+                showToast('تعذر الحفظ في Firebase: جلسة الدخول السحابية غير نشطة. سجل الدخول بحساب معتمد ثم أعد المحاولة.', 'error');
+                return false;
+            }
+            try {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'cars', car.id), car);
+                return true;
+            } catch (error) {
+                console.error('Failed to sync car changes:', error);
+                showToast(getCloudSyncErrorMessage(error, fallbackMessage), 'error');
+                return false;
+            }
+        };
+
         const syncDeliveredCarsToStorage = (cars) => {
             localStorage.setItem('safwa_delivered_cars', JSON.stringify(cars));
             window.renderDeliveredCars();
@@ -5407,7 +5545,7 @@
         const getCloudSyncErrorMessage = (error, fallbackMessage) => {
             const code = (error && error.code) ? error.code : '';
             if (code === 'permission-denied') {
-                return 'تعذر المزامنة: صلاحيات Firestore لا تسمح بالكتابة/الحذف على cars أو delivered_cars. عدل قواعد Firebase أولاً.';
+                return 'رفضت قواعد Firestore حفظ السيارة. تأكد من نشر قواعد مشروع areej-alsafwa-app التي تسمح للحساب المعتمد بالكتابة على cars، ومن أن حسابك معتمد.';
             }
             if (code === 'unauthenticated') {
                 return 'تعذر المزامنة: الجلسة غير مسجلة الدخول على Firebase.';
@@ -5454,7 +5592,7 @@
 
             if (filteredDeliveredCars.length === 0) {
                 tableBody.innerHTML = '';
-                if (noMsg) noMsg.querySelector('span').textContent = 'لا توجد نتائج مطابقة للسيارة أو اللوحة أو رقم المطالبة أو الجوال.';
+                if (noMsg) noMsg.querySelector('span').textContent = 'لا توجد نتائج مطابقة للسيارة أو اللوحة أو اسم العميل أو رقم المطالبة أو الجوال.';
                 if (noMsg) noMsg.classList.remove('hidden');
                 return;
             }
@@ -5472,15 +5610,24 @@
                 if (isNaN(deliveredDate.getTime())) deliveredDate = new Date();
                 const deliveredDateStr = deliveredDate.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }) + ' - ' + deliveredDate.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
                 const assignments = Array.isArray(c.assignments) ? c.assignments : [];
+                const customerPhone = c.customerPhone || c.phoneNumber || c.phone || '';
+                const normalizedPhone = String(customerPhone).replace(/[^\d+]/g, '');
                 const workersText = assignments.length
                     ? assignments.map((assignment) => {
                         const workerName = assignment.workerName || assignment.name || 'عامل';
                         return `${workerName}${assignment.hours ? ` (${assignment.hours} ساعة)` : ''}`;
                     }).join('، ')
                     : '';
+                const accidentsText = ensureCarAccidents(c).map((accident, index) => {
+                    const claim = accident.claimNumber ? `المطالبة ${accident.claimNumber}` : `حادث ${index + 1}`;
+                    return `${claim} - ${accidentStatusLabel(accident.approval)}${accident.approvalAmount !== '' && accident.approvalAmount != null ? ` - التعميد ${accident.approvalAmount} ريال` : ''}${accident.deductibleAmount !== '' && accident.deductibleAmount != null ? ` - التحمل ${accident.deductibleAmount} ريال` : ''}`;
+                }).join(' | ');
                 const details = [
                     ['اسم العميل', c.customerName],
-                    ['رقم الجوال', c.customerPhone || c.phoneNumber || c.phone],
+                    ['رقم الجوال', customerPhone
+                        ? `<a href="tel:${escapeHtml(normalizedPhone)}" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline" dir="ltr">${escapeHtml(customerPhone)}</a>`
+                        : ''],
+                    ['الحوادث', accidentsText],
                     ['رقم المطالبة', c.claimNumber],
                     ['لون السيارة', c.carColor],
                     ['مبلغ التحمل', c.deductibleAmount !== '' && c.deductibleAmount != null ? `${c.deductibleAmount} ريال` : ''],
@@ -5494,7 +5641,7 @@
                     .map(([label, value]) => `
                         <span class="inline-flex items-baseline gap-1 rounded bg-white/70 dark:bg-slate-900/60 px-1.5 py-1 text-[10px] leading-tight break-words">
                             <span class="text-slate-500 dark:text-slate-400">${label}:</span>
-                            <span class="font-medium text-slate-800 dark:text-slate-200">${escapeHtml(value)}</span>
+                            <span class="font-medium text-slate-800 dark:text-slate-200">${label === 'رقم الجوال' ? value : escapeHtml(value)}</span>
                         </span>`).join('');
 
                 rows += `
@@ -5502,7 +5649,9 @@
                         <td class="p-3 align-top">
                             <div class="mb-2 text-xs font-bold">
                                 ${escapeHtml(c.model || '-')}<br>
-                                <span class="text-emerald-600 font-mono">${escapeHtml(c.plate || '-')}</span>
+                                ${c.plate
+                                    ? `<button type="button" onclick="window.copyCarPlateToClipboard(${jsArg(c.plate)})" class="text-emerald-600 font-mono hover:underline cursor-pointer" title="نسخ رقم اللوحة">${escapeHtml(c.plate)}</button>`
+                                    : '<span class="text-emerald-600 font-mono">-</span>'}
                             </div>
                             ${detailsHtml ? `<div class="flex flex-wrap gap-1 min-w-[220px] max-w-2xl">${detailsHtml}</div>` : ''}
                         </td>
@@ -5597,7 +5746,7 @@
             showToast('تم الحذف النهائي من سجل التسليم بنجاح!', 'success');
         });
 
-        window.addCarToTracker = () => {
+        window.addCarToTracker = async () => {
             const m = document.getElementById('trackerCarModel').value.trim();
             const p = document.getElementById('trackerCarPlate').value.trim();
             const n = document.getElementById('trackerCarNotes').value.trim();
@@ -5645,6 +5794,23 @@
                 repairStatus: document.getElementById('trackerRepairStatus').value,
                 date: new Date().toISOString()
             };
+            const hasInitialAccident = Boolean(
+                claimNumber ||
+                deductibleAmount !== '' ||
+                approvalAmount !== '' ||
+                repairDurationDays !== '' ||
+                c.approval !== 'pending'
+            );
+            c.accidents = hasInitialAccident ? [{
+                id: `accident_${c.id}`,
+                date: c.date,
+                claimNumber,
+                approval: c.approval,
+                approvalAmount,
+                deductibleAmount,
+                repairDurationDays,
+                notes: ''
+            }] : [];
 
             c.lastLocationUpdatedAt = c.date;
             c.lastApprovalUpdatedAt = c.date;
@@ -5652,10 +5818,12 @@
             c.lastStatusUpdatedAt = c.date;
 
             const nextCars = [c, ...currentCars];
-            syncCarsToStorage(nextCars);
-
-            if (isFirebaseActive) {
-                setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'cars', c.id), c);
+            if (!await syncCarToCloud(c, 'تعذر إضافة السيارة إلى Firebase.')) return;
+            try {
+                syncCarsToStorage(nextCars);
+            } catch (error) {
+                console.error('Failed to save new car locally:', error);
+                return showToast('تمت إضافة السيارة إلى Firebase، لكن تعذر تحديث العرض المحلي. أعد تحميل الصفحة.', 'error');
             }
 
             logActivity('إضافة سيارة', `إضافة: ${m} - لوحة: ${p}${customerName ? ` - العميل: ${customerName}` : ''}`);
@@ -5678,23 +5846,195 @@
             showToast('تم إضافة السيارة بنجاح!');
         };
 
+        window.openCarAccidentsModal = (carId) => {
+            const cars = JSON.parse(localStorage.getItem('safwa_cars_tracker') || '[]');
+            const car = cars.find((item) => item.id === carId);
+            if (!car) return showToast('تعذر العثور على السيارة المطلوبة!', 'error');
+
+            ensureCarAccidents(car);
+            localStorage.setItem('safwa_cars_tracker', JSON.stringify(cars));
+            document.getElementById('accidentCarId').value = carId;
+            document.getElementById('carAccidentsModalVehicle').textContent = `${car.model || ''} - ${car.plate || ''}`;
+            window.resetAccidentForm();
+            window.renderCarAccidentsList();
+            document.getElementById('carAccidentsModal').classList.remove('hidden');
+            window.syncModalPageScroll();
+        };
+
+        window.closeCarAccidentsModal = () => {
+            document.getElementById('carAccidentsModal').classList.add('hidden');
+            window.syncModalPageScroll();
+        };
+
+        window.renderCarAccidentsList = () => {
+            const carId = document.getElementById('accidentCarId').value;
+            const cars = JSON.parse(localStorage.getItem('safwa_cars_tracker') || '[]');
+            const car = cars.find((item) => item.id === carId);
+            const list = document.getElementById('carAccidentsList');
+            if (!list) return;
+            if (!car) {
+                list.innerHTML = '<p class="text-sm text-red-600">تعذر العثور على السيارة.</p>';
+                return;
+            }
+
+            const accidents = ensureCarAccidents(car);
+            list.innerHTML = accidents.length ? accidents.map((accident, index) => {
+                const date = accident.date && !Number.isNaN(new Date(accident.date).getTime())
+                    ? new Date(accident.date).toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' })
+                    : 'التاريخ غير محدد';
+                const details = [
+                    accident.claimNumber ? `رقم المطالبة: ${escapeHtml(accident.claimNumber)}` : 'بدون رقم مطالبة',
+                    accidentStatusLabel(accident.approval),
+                    accident.approvalAmount !== '' && accident.approvalAmount != null ? `التعميد: ${escapeHtml(accident.approvalAmount)} ريال` : '',
+                    accident.deductibleAmount !== '' && accident.deductibleAmount != null ? `التحمل: ${escapeHtml(accident.deductibleAmount)} ريال` : ''
+                ].filter(Boolean);
+                return `<div class="flex items-start justify-between gap-3 rounded-xl border border-slate-200 dark:border-slate-700 p-3">
+                    <div class="min-w-0">
+                        <div class="text-xs font-bold text-slate-800 dark:text-white">حادث ${index + 1} <span class="font-normal text-slate-500">- ${escapeHtml(date)}</span></div>
+                        <div class="mt-1 text-[11px] text-slate-600 dark:text-slate-300">${details.join(' <span class="mx-1 text-slate-300">|</span> ')}</div>
+                        ${accident.notes ? `<div class="mt-1 text-[10px] text-slate-500">${escapeHtml(accident.notes)}</div>` : ''}
+                    </div>
+                    <div class="flex shrink-0 gap-1">
+                        <button type="button" onclick="window.editCarAccident(${jsArg(accident.id)})" class="rounded-lg p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30" title="تعديل الحادث"><i class="fa-solid fa-pen"></i></button>
+                        <button type="button" onclick="window.deleteCarAccident(${jsArg(accident.id)})" class="rounded-lg p-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30" title="حذف الحادث"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                </div>`;
+            }).join('') : '<p class="rounded-lg bg-slate-50 dark:bg-slate-800 p-3 text-xs text-slate-500">لا توجد حوادث مسجلة لهذه السيارة.</p>';
+        };
+
+        window.resetAccidentForm = () => {
+            document.getElementById('accidentId').value = '';
+            document.getElementById('accidentDate').value = new Date().toISOString().slice(0, 10);
+            document.getElementById('accidentClaimNumber').value = '';
+            document.getElementById('accidentApproval').value = 'pending';
+            document.getElementById('accidentApprovalAmount').value = '';
+            document.getElementById('accidentDeductibleAmount').value = '';
+            document.getElementById('accidentRepairDurationDays').value = '';
+            document.getElementById('accidentNotes').value = '';
+            document.getElementById('accidentFormTitle').textContent = 'إضافة حادث';
+        };
+
+        window.editCarAccident = (accidentId) => {
+            const carId = document.getElementById('accidentCarId').value;
+            const cars = JSON.parse(localStorage.getItem('safwa_cars_tracker') || '[]');
+            const car = cars.find((item) => item.id === carId);
+            const accident = car && ensureCarAccidents(car).find((item) => item.id === accidentId);
+            if (!accident) return showToast('تعذر العثور على الحادث المطلوب!', 'error');
+
+            document.getElementById('accidentId').value = accident.id;
+            document.getElementById('accidentDate').value = getAccidentDateInputValue(accident.date);
+            document.getElementById('accidentClaimNumber').value = accident.claimNumber || '';
+            document.getElementById('accidentApproval').value = accident.approval || 'pending';
+            document.getElementById('accidentApprovalAmount').value = accident.approvalAmount ?? '';
+            document.getElementById('accidentDeductibleAmount').value = accident.deductibleAmount ?? '';
+            document.getElementById('accidentRepairDurationDays').value = accident.repairDurationDays ?? '';
+            document.getElementById('accidentNotes').value = accident.notes || '';
+            document.getElementById('accidentFormTitle').textContent = 'تعديل بيانات الحادث';
+            document.getElementById('accidentFormTitle').scrollIntoView({ block: 'nearest' });
+        };
+
+        window.saveCarAccident = async () => {
+            const carId = document.getElementById('accidentCarId').value;
+            const id = document.getElementById('accidentId').value;
+            const accidentDateInput = document.getElementById('accidentDate').value;
+            const claimNumber = document.getElementById('accidentClaimNumber').value.trim();
+            const approval = document.getElementById('accidentApproval').value;
+            const approvalAmountInput = document.getElementById('accidentApprovalAmount').value.trim();
+            const deductibleInput = document.getElementById('accidentDeductibleAmount').value.trim();
+            const repairDurationInput = document.getElementById('accidentRepairDurationDays').value.trim();
+            const notes = document.getElementById('accidentNotes').value.trim();
+            if (!accidentDateInput) return showToast('حدد تاريخ الحادث!', 'error');
+
+            const approvalAmount = approvalAmountInput === '' ? '' : Number(approvalAmountInput);
+            if (approvalAmountInput !== '' && (!Number.isFinite(approvalAmount) || approvalAmount < 0)) {
+                return showToast('أدخل مبلغ تعميد صحيحاً لا يقل عن صفر!', 'error');
+            }
+            const deductibleAmount = deductibleInput === '' ? '' : Number(deductibleInput);
+            if (deductibleInput !== '' && (!Number.isFinite(deductibleAmount) || deductibleAmount < 0)) {
+                return showToast('أدخل مبلغ تحمل صحيحاً لا يقل عن صفر!', 'error');
+            }
+            const repairDurationDays = repairDurationInput === '' ? '' : Number(repairDurationInput);
+            if (repairDurationInput !== '' && (!Number.isInteger(repairDurationDays) || repairDurationDays < 0)) {
+                return showToast('أدخل مدة إصلاح صحيحة بالأيام لا تقل عن صفر!', 'error');
+            }
+
+            const cars = JSON.parse(localStorage.getItem('safwa_cars_tracker') || '[]');
+            const car = cars.find((item) => item.id === carId);
+            if (!car) return showToast('تعذر العثور على السيارة المطلوبة!', 'error');
+            const accidents = ensureCarAccidents(car);
+            const existingIndex = accidents.findIndex((item) => item.id === id);
+            const accident = {
+                id: id || `accident_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+                date: new Date(`${accidentDateInput}T12:00:00`).toISOString(),
+                claimNumber,
+                approval,
+                approvalAmount,
+                deductibleAmount,
+                repairDurationDays,
+                notes
+            };
+            if (existingIndex >= 0) accidents[existingIndex] = accident;
+            else accidents.unshift(accident);
+            car.accidents = accidents;
+            syncLegacyAccidentFields(car);
+
+            const nextCars = cars.map((item) => item.id === carId ? car : item);
+            if (!await syncCarToCloud(car, 'تعذر حفظ الحادث في Firebase. تحقق من قواعد Firestore وصلاحية حسابك.')) return;
+            try {
+                syncCarsToStorage(nextCars);
+            } catch (error) {
+                console.error('Failed to save car accident locally:', error);
+                return showToast('تم حفظ الحادث في Firebase، لكن تعذر تحديث العرض المحلي. أعد تحميل الصفحة.', 'error');
+            }
+            window.resetAccidentForm();
+            window.closeCarAccidentsModal();
+            showToast(existingIndex >= 0 ? 'تم تحديث الحادث وتحديث سجل السيارات بنجاح!' : 'تم حفظ الحادث وتحديث سجل السيارات بنجاح!', 'success');
+            try {
+                logActivity('تحديث حالة', `${existingIndex >= 0 ? 'تعديل' : 'إضافة'} حادث للسيارة ${car.model} (${car.plate})${claimNumber ? ` - المطالبة: ${claimNumber}` : ''}`);
+            } catch (error) {
+                console.error('Failed to log car accident change:', error);
+            }
+        };
+
+        window.deleteCarAccident = (accidentId) => showCustomConfirm('حذف الحادث', 'هل تريد حذف بيانات هذا الحادث؟ لا يمكن التراجع عن ذلك.', async () => {
+            const carId = document.getElementById('accidentCarId').value;
+            const cars = JSON.parse(localStorage.getItem('safwa_cars_tracker') || '[]');
+            const car = cars.find((item) => item.id === carId);
+            if (!car) return showToast('تعذر العثور على السيارة المطلوبة!', 'error');
+            const accidents = ensureCarAccidents(car);
+            const accident = accidents.find((item) => item.id === accidentId);
+            if (!accident) return showToast('تعذر العثور على الحادث المطلوب!', 'error');
+            car.accidents = accidents.filter((item) => item.id !== accidentId);
+            syncLegacyAccidentFields(car);
+            if (!await syncCarToCloud(car, 'تعذر حذف الحادث من Firebase.')) return;
+            try {
+                syncCarsToStorage(cars.map((item) => item.id === carId ? car : item));
+            } catch (error) {
+                console.error('Failed to update local car after deleting accident:', error);
+                return showToast('تم حذف الحادث في Firebase، لكن تعذر تحديث العرض المحلي. أعد تحميل الصفحة.', 'error');
+            }
+            window.resetAccidentForm();
+            window.closeCarAccidentsModal();
+            logActivity('تحديث حالة', `حذف حادث من السيارة ${car.model} (${car.plate})`);
+            showToast('تم حذف الحادث وتحديث سجل السيارات بنجاح!', 'success');
+        });
+
         window.openEditCarModal = (id) => {
             const cars = JSON.parse(localStorage.getItem('safwa_cars_tracker') || '[]');
             const car = cars.find(c => c.id === id);
             if (!car) return showToast('تعذر العثور على السيارة المطلوبة!', 'error');
 
+            const hasAccidents = ensureCarAccidents(car).length > 0;
             document.getElementById('editCarId').value = car.id;
             document.getElementById('editCarModel').value = car.model || '';
             document.getElementById('editCarPlate').value = car.plate || '';
             document.getElementById('editCarCustomerName').value = car.customerName || '';
             document.getElementById('editCarCustomerPhone').value = car.customerPhone || '';
             document.getElementById('editCarColor').value = car.carColor || '';
-            document.getElementById('editCarDeductibleAmount').value = car.deductibleAmount ?? '';
-            document.getElementById('editCarClaimNumber').value = car.claimNumber || '';
-            document.getElementById('editCarApprovalAmount').value = car.approvalAmount ?? '';
-            document.getElementById('editCarRepairDurationDays').value = car.repairDurationDays ?? '';
             document.getElementById('editCarLocation').value = car.location || 'center';
             document.getElementById('editCarApproval').value = car.approval || 'pending';
+            document.getElementById('editCarApproval').disabled = hasAccidents;
+            document.getElementById('editCarApprovalHint').classList.toggle('hidden', !hasAccidents);
             document.getElementById('editCarRepairStatus').value = car.repairStatus || 'waiting';
             document.getElementById('editCarNotes').value = car.notes || '';
             setPlateInputState('editCarPlate', false);
@@ -5722,27 +6062,11 @@
             const customerName = document.getElementById('editCarCustomerName').value.trim();
             const customerPhone = document.getElementById('editCarCustomerPhone').value.trim();
             const carColor = document.getElementById('editCarColor').value.trim();
-            const deductibleInput = document.getElementById('editCarDeductibleAmount').value.trim();
-            const claimNumber = document.getElementById('editCarClaimNumber').value.trim();
-            const approvalAmountInput = document.getElementById('editCarApprovalAmount').value.trim();
-            const repairDurationDaysInput = document.getElementById('editCarRepairDurationDays').value.trim();
             const location = document.getElementById('editCarLocation').value;
             const approval = document.getElementById('editCarApproval').value;
             const repairStatus = document.getElementById('editCarRepairStatus').value;
 
             if (!model || !plate) return showToast('الرجاء تعبئة الحقول الإجبارية (السيارة واللوحة)!', 'error');
-            const deductibleAmount = deductibleInput === '' ? '' : Number(deductibleInput);
-            if (deductibleInput !== '' && (!Number.isFinite(deductibleAmount) || deductibleAmount < 0)) {
-                return showToast('أدخل مبلغ تحمل صحيحاً لا يقل عن صفر!', 'error');
-            }
-            const approvalAmount = approvalAmountInput === '' ? '' : Number(approvalAmountInput);
-            if (approvalAmountInput !== '' && (!Number.isFinite(approvalAmount) || approvalAmount < 0)) {
-                return showToast('أدخل مبلغ تعميد صحيحاً لا يقل عن صفر!', 'error');
-            }
-            const repairDurationDays = repairDurationDaysInput === '' ? '' : Number(repairDurationDaysInput);
-            if (repairDurationDaysInput !== '' && (!Number.isInteger(repairDurationDays) || repairDurationDays < 0)) {
-                return showToast('أدخل مدة إصلاح صحيحة بالأيام لا تقل عن صفر!', 'error');
-            }
 
             const cars = JSON.parse(localStorage.getItem('safwa_cars_tracker') || '[]');
             const duplicateCar = window.checkEditCarPlateDuplicate();
@@ -5778,12 +6102,13 @@
                 customerName,
                 customerPhone,
                 carColor,
-                deductibleAmount,
-                claimNumber,
-                approvalAmount,
-                repairDurationDays,
+                deductibleAmount: oldCar?.deductibleAmount ?? '',
+                claimNumber: oldCar?.claimNumber || '',
+                approvalAmount: oldCar?.approvalAmount ?? '',
+                repairDurationDays: oldCar?.repairDurationDays ?? '',
+                accidents: oldCar ? ensureCarAccidents(oldCar) : [],
                 location,
-                approval,
+                approval: oldCar && ensureCarAccidents(oldCar).length ? oldCar.approval : approval,
                 repairStatus,
                 date: originalDate,
                 lastLocationUpdatedAt,
@@ -5793,60 +6118,113 @@
             };
 
             const nextCars = cars.map(c => c.id === id ? updatedCar : c);
-            syncCarsToStorage(nextCars);
-
-            if (isFirebaseActive) {
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'cars', id), updatedCar);
+            if (!await syncCarToCloud(updatedCar, 'تعذر حفظ بيانات السيارة في Firebase. تحقق من قواعد Firestore وصلاحية حسابك.')) return;
+            try {
+                syncCarsToStorage(nextCars);
+            } catch (error) {
+                console.error('Failed to save edited car locally:', error);
+                return showToast('تم حفظ بيانات السيارة في Firebase، لكن تعذر تحديث العرض المحلي. أعد تحميل الصفحة.', 'error');
             }
-            logActivity('تحديث حالة', `تعديل بيانات كاملة للسيارة: ${model} (${plate})`);
-            showToast('تم تعديل بيانات السيارة بنجاح وحفظها سحابياً! 💾✨', 'success');
             setPlateInputState('editCarPlate', false);
             window.closeEditCarModal();
+            showToast('تم حفظ التعديلات وتحديث سجل السيارات الإداري بنجاح!', 'success');
+            try {
+                logActivity('تحديث حالة', `تعديل بيانات كاملة للسيارة: ${model} (${plate})`);
+            } catch (error) {
+                console.error('Failed to log edited car:', error);
+            }
         };
 
-        window.toggleCarLocation = (id) => {
+        window.toggleCarLocation = async (id) => {
             const cars = JSON.parse(localStorage.getItem('safwa_cars_tracker') || '[]');
-            const c = cars.find(x => x.id === id);
-            if (c) {
+            const oldCar = cars.find(x => x.id === id);
+            if (oldCar) {
                 const nowIso = new Date().toISOString();
-                c.location = c.location === 'center' ? 'customer' : 'center';
-                c.lastLocationUpdatedAt = nowIso;
-                c.lastStatusUpdatedAt = nowIso;
+                const c = {
+                    ...oldCar,
+                    location: oldCar.location === 'center' ? 'customer' : 'center',
+                    lastLocationUpdatedAt: nowIso,
+                    lastStatusUpdatedAt: nowIso
+                };
+                if (!await syncCarToCloud(c, 'تعذر تحديث موقع السيارة في Firebase.')) return;
                 const locText = c.location === 'center' ? 'بالمركز 🏢' : 'مع العميل 🚗';
                 syncCarsToStorage(cars.map(x => x.id === id ? c : x));
-                if (isFirebaseActive) setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'cars', id), c);
                 logActivity('تحديث حالة', `تغيير موقع السيارة ${c.model} (${c.plate}) إلى: ${locText}`);
                 showToast('تم تحديث موقع السيارة بنجاح!');
             }
         };
 
-        window.toggleCarApproval = (id) => {
+        window.toggleCarApproval = async (id) => {
             const cars = JSON.parse(localStorage.getItem('safwa_cars_tracker') || '[]');
-            const c = cars.find(x => x.id === id);
-            if (c) {
+            const oldCar = cars.find(x => x.id === id);
+            if (oldCar) {
+                const accidents = ensureCarAccidents(oldCar);
+                if (accidents.length) return window.toggleCarAccidentApproval(id, accidents[0].id);
                 const nowIso = new Date().toISOString();
-                c.approval = c.approval === 'pending' ? 'approved' : c.approval === 'approved' ? 'none' : 'pending';
-                c.lastApprovalUpdatedAt = nowIso;
-                c.lastStatusUpdatedAt = nowIso;
+                const c = {
+                    ...oldCar,
+                    approval: oldCar.approval === 'pending' ? 'approved' : oldCar.approval === 'approved' ? 'none' : 'pending',
+                    lastApprovalUpdatedAt: nowIso,
+                    lastStatusUpdatedAt: nowIso
+                };
+                if (!await syncCarToCloud(c, 'تعذر تحديث حالة التعميد في Firebase.')) return;
                 const appMap = { pending: '⏳ بانتظار التعميد', approved: '✅ معمد', none: '❌ لم يتم التعميد' };
                 syncCarsToStorage(cars.map(x => x.id === id ? c : x));
-                if (isFirebaseActive) setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'cars', id), c);
                 logActivity('تحديث حالة', `تغيير حالة تعميد السيارة ${c.model} (${c.plate}) إلى: ${appMap[c.approval]}`);
                 showToast('تم تحديث حالة تعميد السيارة بنجاح!');
             }
         };
 
-        window.toggleCarRepairStatus = (id) => {
+        window.toggleCarAccidentApproval = async (carId, accidentId) => {
             const cars = JSON.parse(localStorage.getItem('safwa_cars_tracker') || '[]');
-            const c = cars.find(x => x.id === id);
-            if (c) {
+            const oldCar = cars.find((car) => car.id === carId);
+            if (!oldCar) return showToast('تعذر العثور على السيارة المطلوبة!', 'error');
+
+            const accidents = ensureCarAccidents(oldCar);
+            const accident = accidents.find((item) => item.id === accidentId);
+            if (!accident) return showToast('تعذر العثور على الحادث المطلوب!', 'error');
+
+            const nowIso = new Date().toISOString();
+            const nextApproval = accident.approval === 'pending'
+                ? 'approved'
+                : accident.approval === 'approved' ? 'none' : 'pending';
+            const updatedCar = {
+                ...oldCar,
+                accidents: accidents.map((item) => item.id === accidentId
+                    ? { ...item, approval: nextApproval, lastApprovalUpdatedAt: nowIso }
+                    : item),
+                lastApprovalUpdatedAt: nowIso,
+                lastStatusUpdatedAt: nowIso
+            };
+            syncLegacyAccidentFields(updatedCar);
+            if (!await syncCarToCloud(updatedCar, 'تعذر تحديث حالة تعميد الحادث في Firebase.')) return;
+
+            try {
+                syncCarsToStorage(cars.map((car) => car.id === carId ? updatedCar : car));
+            } catch (error) {
+                console.error('Failed to update local car after changing accident approval:', error);
+                return showToast('تم تحديث حالة التعميد في Firebase، لكن تعذر تحديث العرض المحلي. أعد تحميل الصفحة.', 'error');
+            }
+
+            const label = updatedCar.accidents.find((item) => item.id === accidentId)?.claimNumber || 'الحادث';
+            logActivity('تحديث حالة', `تغيير حالة تعميد ${label} للسيارة ${updatedCar.model} (${updatedCar.plate}) إلى: ${accidentStatusLabel(nextApproval)}`);
+            showToast(`تم تحديث حالة التعميد لـ ${label} وتحديث السجل العام.`);
+        };
+
+        window.toggleCarRepairStatus = async (id) => {
+            const cars = JSON.parse(localStorage.getItem('safwa_cars_tracker') || '[]');
+            const oldCar = cars.find(x => x.id === id);
+            if (oldCar) {
                 const nowIso = new Date().toISOString();
-                c.repairStatus = c.repairStatus === 'waiting' ? 'waiting_for_parts' : c.repairStatus === 'waiting_for_parts' ? 'repairing' : c.repairStatus === 'repairing' ? 'ready' : 'waiting';
-                c.lastRepairStatusUpdatedAt = nowIso;
-                c.lastStatusUpdatedAt = nowIso;
+                const c = {
+                    ...oldCar,
+                    repairStatus: oldCar.repairStatus === 'waiting' ? 'waiting_for_parts' : oldCar.repairStatus === 'waiting_for_parts' ? 'repairing' : oldCar.repairStatus === 'repairing' ? 'ready' : 'waiting',
+                    lastRepairStatusUpdatedAt: nowIso,
+                    lastStatusUpdatedAt: nowIso
+                };
+                if (!await syncCarToCloud(c, 'تعذر تحديث حالة الإصلاح في Firebase.')) return;
                 const repMap = { waiting: '⏳ بانتظار الإصلاح', waiting_for_parts: '🧩 انتظار القطع', repairing: '🔧 تحت الإصلاح', ready: '✨ جاهزة' };
                 syncCarsToStorage(cars.map(x => x.id === id ? c : x));
-                if (isFirebaseActive) setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'cars', id), c);
                 logActivity('تحديث حالة', `تغيير حالة إصلاح السيارة ${c.model} (${c.plate}) إلى: ${repMap[c.repairStatus]}`);
                 showToast('تم تحديث حالة إصلاح السيارة بنجاح!');
             }
@@ -5879,7 +6257,7 @@
         
         window.exportToExcel = () => {
             const cars = JSON.parse(localStorage.getItem('safwa_cars_tracker')||'[]'); if(cars.length===0) return showToast('لا توجد بيانات للسيارات لتصديرها!','error');
-            let csv = '\uFEFFالسيارة والموديل,رقم اللوحة,موقع السيارة,حالة التعميد,حالة الإصلاح,الملاحظات,تاريخ الدخول,لون السيارة,مبلغ التحمل,رقم المطالبة,مبلغ التعميد,مدة الإصلاح بالأيام\n';
+            let csv = '\uFEFFالسيارة والموديل,رقم اللوحة,موقع السيارة,حالة التعميد,حالة الإصلاح,الملاحظات,تاريخ الدخول,لون السيارة,مبلغ التحمل,رقم المطالبة,مبلغ التعميد,مدة الإصلاح بالأيام,بيانات الحوادث\n';
             
             const locMap = { 'center': 'بالمركز', 'customer': 'مع العميل' };
             const appMap = { 'pending': 'بانتظار التعميد', 'approved': 'تم التعميد', 'none': 'لم يتم' };
@@ -5897,12 +6275,13 @@
                 const claimNumber = `"${(c.claimNumber || '').replace(/"/g, '""')}"`;
                 const approvalAmount = c.approvalAmount ?? '';
                 const repairDurationDays = c.repairDurationDays ?? '';
+                const accidents = `"${JSON.stringify(ensureCarAccidents(c)).replace(/"/g, '""')}"`;
                 
                 let dtObj = new Date(c.date);
                 if (isNaN(dtObj.getTime())) dtObj = new Date();
                 const dateStr = dtObj.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' });
                 
-                csv += `${model},${plate},${loc},${app},${rep},${notes},${dateStr},${carColor},${deductibleAmount},${claimNumber},${approvalAmount},${repairDurationDays}\n`;
+                csv += `${model},${plate},${loc},${app},${rep},${notes},${dateStr},${carColor},${deductibleAmount},${claimNumber},${approvalAmount},${repairDurationDays},${accidents}\n`;
             });
             
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -5956,6 +6335,28 @@
                     if (row.length < 2 || !row[0].trim() || !row[1].trim()) continue;
                     
                     const rawDate = row[6] ? row[6].trim() : null;
+                    let importedAccidents = [];
+                    if (row[12] && row[12].trim()) {
+                        try {
+                            const parsedAccidents = JSON.parse(row[12]);
+                            if (!Array.isArray(parsedAccidents)) throw new Error('بيانات الحوادث ليست قائمة.');
+                            importedAccidents = parsedAccidents.map((accident, index) => ({
+                                id: typeof accident.id === 'string' && accident.id ? accident.id : `accident_import_${Date.now()}_${i}_${index}`,
+                                date: accident.date && !Number.isNaN(new Date(accident.date).getTime()) ? new Date(accident.date).toISOString() : new Date().toISOString(),
+                                claimNumber: String(accident.claimNumber || ''),
+                                approval: ['pending', 'approved', 'none'].includes(accident.approval) ? accident.approval : 'pending',
+                                approvalAmount: Number.isFinite(Number(accident.approvalAmount)) && Number(accident.approvalAmount) >= 0 && accident.approvalAmount !== '' ? Number(accident.approvalAmount) : '',
+                                deductibleAmount: Number.isFinite(Number(accident.deductibleAmount)) && Number(accident.deductibleAmount) >= 0 && accident.deductibleAmount !== '' ? Number(accident.deductibleAmount) : '',
+                                repairDurationDays: Number.isInteger(Number(accident.repairDurationDays)) && Number(accident.repairDurationDays) >= 0 && accident.repairDurationDays !== '' ? Number(accident.repairDurationDays) : '',
+                                notes: String(accident.notes || '')
+                            }));
+                        } catch (error) {
+                            console.error('Invalid accident data in CSV row:', error);
+                            showToast(`تعذر استيراد الصف ${i + 1}: بيانات الحوادث غير صالحة.`, 'error');
+                            return;
+                        }
+                    }
+
                     const c = {
                         id: 'car_' + (Date.now() + i + Math.random().toString(36).substr(2, 4)),
                         model: row[0].replace(/"/g, '').trim(),
@@ -5969,7 +6370,8 @@
                         deductibleAmount: row[8] && row[8].trim() !== '' && Number.isFinite(Number(row[8])) && Number(row[8]) >= 0 ? Number(row[8]) : '',
                         claimNumber: row[9] ? row[9].replace(/"/g, '').trim() : '',
                         approvalAmount: row[10] && row[10].trim() !== '' && Number.isFinite(Number(row[10])) && Number(row[10]) >= 0 ? Number(row[10]) : '',
-                        repairDurationDays: row[11] && row[11].trim() !== '' && Number.isInteger(Number(row[11])) && Number(row[11]) >= 0 ? Number(row[11]) : ''
+                        repairDurationDays: row[11] && row[11].trim() !== '' && Number.isInteger(Number(row[11])) && Number(row[11]) >= 0 ? Number(row[11]) : '',
+                        accidents: row[12] && row[12].trim() ? importedAccidents : undefined
                     };
 
                     c.lastLocationUpdatedAt = c.date;
