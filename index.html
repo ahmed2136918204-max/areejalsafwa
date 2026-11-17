@@ -1435,6 +1435,10 @@
                         <span class="text-[10px] text-gray-400 font-bold mb-1">✨ جاهزة</span>
                         <span class="text-xl font-black text-teal-600" id="stat-ready">0</span>
                     </div>
+                    <div class="bg-white dark:bg-slate-900 border dark:border-slate-800 p-3 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center">
+                        <span class="text-[10px] text-gray-400 font-bold mb-1">💰 إجمالي مبالغ التعميدات</span>
+                        <span class="text-lg font-black text-emerald-600" id="stat-approval-amount">0 ريال</span>
+                    </div>
                 </div>
 
                 <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-lg p-5 border border-gray-100 dark:border-slate-800 mb-6 text-right">
@@ -3748,7 +3752,15 @@
             const phoneNumber = document.getElementById('phoneNumber');
             document.getElementById('customerName').value = car.customerName || '';
             document.getElementById('carModel').value = car.model || '';
-            document.getElementById('price').value = car.deductibleAmount ?? '';
+            const deductibleAmounts = ensureCarAccidents(car)
+                .map((accident) => accident.deductibleAmount)
+                .filter((amount) => amount !== '' && amount != null && Number.isFinite(Number(amount)) && Number(amount) >= 0)
+                .map(Number);
+            const totalDeductibleAmount = deductibleAmounts.reduce(
+                (total, amount) => total + Math.round(amount * 100),
+                0
+            ) / 100;
+            document.getElementById('price').value = deductibleAmounts.length ? String(totalDeductibleAmount) : '';
 
             const supportedCountryCodes = ['966', '971', '965', '968', '974', '973', '20', '962', '964'];
             const matchedCountryCode = supportedCountryCodes.find((code) => phone.startsWith(code));
@@ -4786,6 +4798,13 @@
             const pendingAppCount = cars.filter(c => carHasApprovalStatus(c, 'pending')).length;
             const repairingCount = cars.filter(c => c.repairStatus === 'repairing').length;
             const readyCount = cars.filter(c => c.repairStatus === 'ready').length;
+            const approvalAmountTotal = cars.reduce((carTotal, car) =>
+                carTotal + ensureCarAccidents(car).reduce((accidentTotal, accident) => {
+                    const amount = Number(accident.approvalAmount);
+                    return accident.approvalAmount !== '' && accident.approvalAmount != null && Number.isFinite(amount) && amount >= 0
+                        ? accidentTotal + amount
+                        : accidentTotal;
+                }, 0), 0);
 
             const updateText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
             updateText('stat-total', total);
@@ -4795,6 +4814,7 @@
             updateText('stat-pending', pendingAppCount);
             updateText('stat-repairing', repairingCount);
             updateText('stat-ready', readyCount);
+            updateText('stat-approval-amount', `${approvalAmountTotal.toLocaleString('en-US', { maximumFractionDigits: 2 })} ريال`);
 
             const searchInput = document.getElementById('carSearchInput');
             const term = searchInput ? searchInput.value.trim().toLowerCase() : '';
@@ -4862,7 +4882,7 @@
                 }).join('');
                 const accidentsHtml = accidents.length
                     ? `<div class="mt-2 flex flex-wrap gap-1">${accidents.map((accident) =>
-                        `<button type="button" onclick="window.openCarAccidentsModal(${jsArg(c.id)})" class="rounded-md border border-amber-200/70 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-950/15 px-2 py-1 text-[10px] font-bold text-amber-700 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-950/40" title="فتح إدارة الحوادث وعرض التفاصيل">${escapeHtml(accident.claimNumber || 'بدون رقم مطالبة')}</button>`
+                        `<button type="button" onclick="window.openCarAccidentsModal(${jsArg(c.id)}, ${jsArg(accident.id)})" class="rounded-md border border-amber-200/70 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-950/15 px-2 py-1 text-[10px] font-bold text-amber-700 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-950/40" title="فتح إدارة الحوادث وتعديل هذه المطالبة">${escapeHtml(accident.claimNumber || 'بدون رقم مطالبة')}</button>`
                     ).join('')}</div>`
                     : '<div class="mt-1 text-[10px] text-slate-400">لا توجد حوادث مسجلة</div>';
                 const notesHtml = c.notes ? `<br><span class="text-[10px] text-amber-700 dark:text-amber-400 font-semibold bg-amber-50 dark:bg-amber-950/30 border border-amber-200/40 px-2 py-0.5 rounded-md inline-block mt-1"><i class="fa-solid fa-sticky-note text-[9px] ml-1"></i> ${escapeHtml(c.notes)}</span>` : '';
@@ -5846,7 +5866,7 @@
             showToast('تم إضافة السيارة بنجاح!');
         };
 
-        window.openCarAccidentsModal = (carId) => {
+        window.openCarAccidentsModal = (carId, accidentId = '') => {
             const cars = JSON.parse(localStorage.getItem('safwa_cars_tracker') || '[]');
             const car = cars.find((item) => item.id === carId);
             if (!car) return showToast('تعذر العثور على السيارة المطلوبة!', 'error');
@@ -5859,6 +5879,7 @@
             window.renderCarAccidentsList();
             document.getElementById('carAccidentsModal').classList.remove('hidden');
             window.syncModalPageScroll();
+            if (accidentId) window.editCarAccident(accidentId);
         };
 
         window.closeCarAccidentsModal = () => {
